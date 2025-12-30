@@ -158,16 +158,34 @@
                 openProfile() {
                     if(!this.isLoggedIn) this.authModal = true;
                     else this.page = 'profile';
-                },
+                        startLogin() {
+            if(!this.userEmail || this.phoneInput.length < 10) {
+                return alert("Kripya sahi Email aur Mobile number bhariye!");
+            }
+            
+            const loader = document.getElementById('loading');
+            if(loader) loader.style.display = 'block';
+            
+            setTimeout(() => {
+                this.isLoggedIn = true;
+                this.userPhone = "+91" + this.phoneInput;
+                localStorage.setItem('ql_user', this.userPhone);
+                localStorage.setItem('ql_email', this.userEmail);
+                this.authModal = false;
+                if(loader) loader.style.display = 'none';
+                alert("Login Successful! Barka-Allah.");
+            }, 2000);
+        },
+                
 
-                login() {
-                    if(this.phoneInput.length < 10) return alert("Valid number!");
-                    this.isLoggedIn = true;
-                    this.userPhone = "+91 " + this.phoneInput;
-                    localStorage.setItem('ql_user', this.userPhone);
-                    this.authModal = false;
-                    this.page = 'home';
-                },
+                
+    
+                    
+                    
+                    
+                    
+                
+                
 
                 handleProductSelection(cat, id) {
                     if(!this.isLoggedIn) { this.authModal = true; return; }
