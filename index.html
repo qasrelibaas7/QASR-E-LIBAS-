@@ -9,6 +9,17 @@
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
+            /* Announcement Bar Styling */
+    .announcement-bar { background: #4285f4; color: white; padding: 8px; text-align: center; font-size: 13px; font-weight: 500; overflow: hidden; }
+    .marquee { display: inline-block; animation: marquee 15s linear infinite; }
+    @keyframes marquee { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
+
+    /* Product Zoom Effect */
+    .product-card { overflow: hidden; border-radius: 15px; transition: 0.3s; }
+    .product-card img { transition: transform 0.5s ease; }
+    .product-card:hover img { transform: scale(1.1); }
+    .product-card:hover { box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        
         [x-cloak] { display: none !important; }
         .gold-text { color: #D4AF37; }
         .gold-bg { background: linear-gradient(135deg, #D4AF37 0%, #B8860B 100%); }
@@ -17,7 +28,10 @@
     </style>
 </head>
 <body class="bg-black text-white" x-data="qasrApp()" x-init="initApp()">
-
+<div class="announcement-bar">
+    <div class="marquee">✨ Special Offer: Free Delivery on all orders above ₹1999! | Premium Arabic Collection is Live! ✨</div>
+</div>
+    
     <header class="sticky top-0 z-50 bg-black/95 border-b border-gold-900/20 py-4">
         <div class="container mx-auto px-4 flex justify-between items-center">
             <div class="flex items-center space-x-3 cursor-pointer" @click="page = 'home'">
@@ -228,7 +242,8 @@
             window.open(whatsappUrl, '_blank');
             alert("Barka-Allah! Order details WhatsApp par bhejein.");
         }
-                    
+          
+              
                     
 
                     this.checkoutModal = false;
@@ -242,6 +257,13 @@
             }
         }
     </script>
+    <div style="display: flex; justify-content: space-around; padding: 20px; background: #f9f9f9; margin: 30px 10px; border-radius: 15px; text-align: center; font-size: 11px; color: #666;">
+    <div><i class="fas fa-shipping-fast" style="font-size: 18px; color: #4285f4; margin-bottom: 5px;"></i><p>Fast Delivery</p></div>
+    <div><i class="fas fa-check-circle" style="font-size: 18px; color: #4285f4; margin-bottom: 5px;"></i><p>Quality Assured</p></div>
+    <div><i class="fas fa-lock" style="font-size: 18px; color: #4285f4; margin-bottom: 5px;"></i><p>Secure Payment</p></div>
+    <div><i class="fas fa-undo" style="font-size: 18px; color: #4285f4; margin-bottom: 5px;"></i><p>Easy Returns</p></div>
+    </div>
+    
     <div style="position: fixed; bottom: 20px; right: 20px; display: flex; flex-direction: column; gap: 15px; z-index: 1000;">
     <a href="https://wa.me/917385009275" target="_blank" style="background: #25D366; color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.4); text-decoration: none;">
         <i class="fab fa-whatsapp"></i>
