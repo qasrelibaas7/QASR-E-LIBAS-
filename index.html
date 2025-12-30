@@ -200,12 +200,18 @@
                         payment: this.payMethod,
                         order_id: orderId
                     });
+             const message = `*Naya Order!*%0A%0A*Order ID:* ${orderId}%0A*Product:* ${this.selectedItem.name}%0A*Customer:* ${this.shipping.name}%0A*Phone:* ${this.userPhone}%0A*Address:* ${this.shipping.address}%0A*Payment:* ${this.payMethod}`;
+        const whatsappUrl = `https://wa.me/917385009275?text=${message}`;
 
-                    if(this.payMethod === 'UPI') {
-                        window.location.href = `upi://pay?pa=7385009275@fam&pn=QasrELibas&am=1250.00&cu=INR&tn=Order_${orderId}`;
-                    } else {
-                        alert("Barka-Allah! Order Placed.");
-                    }
+        if (this.payMethod === 'UPI') {
+            window.location.href = `upi://pay?pa=7385009275@fam&pn=QasrELibas&am=1250.00&cu=INR&tn=Order_${orderId}`;
+            setTimeout(() => { window.open(whatsappUrl, '_blank'); }, 3000);
+        } else {
+            window.open(whatsappUrl, '_blank');
+            alert("Barka-Allah! Order details WhatsApp par bhejein.");
+        }
+                    
+                    
 
                     this.checkoutModal = false;
                     this.page = 'profile';
