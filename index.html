@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QASR-E-LIBAS | Official Store</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        [x-cloak] { display: none !important; }
+        .gold-text { color: #D4AF37; }
+        .gold-bg { background: linear-gradient(135deg, #D4AF37 0%, #B8860B 100%); }
+        .modal-blur { backdrop-filter: blur(20px); background: rgba(0,0,0,0.85); }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="bg-black text-white" x-data="qasrApp()" x-init="initApp()">
+
+    <header class="sticky top-0 z-50 bg-black/95 border-b border-gold-900/20 py-4">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <div class="flex items-center space-x-3 cursor-pointer" @click="page = 'home'">
+                <img src="assets/logo.png" @error="$el.src='https://via.placeholder.com/40?text=QL'" class="w-10 h-10 rounded border border-gold-600/30">
+                <h1 class="text-xl font-serif font-bold gold-text tracking-widest uppercase">Qasr-E-Libas</h1>
+            </div>
+            <div class="flex items-center space-x-6">
+                <button @click="page = 'home'" :class="page === 'home' ? 'gold-text' : 'text-gray-500'"><i class="fa-solid fa-house-chimney text-xl"></i></button>
+                <button @click="openProfile()" :class="page === 'profile' ? 'gold-text' : 'text-gray-500'"><i class="fa-solid fa-circle-user text-xl"></i></button>
+            </div>
+        </div>
+    </header>
+
+    <main x-show="page === 'home'" class="container mx-auto px-4 py-8 space-y-12">
+        <template x-for="cat in sections" :key="cat">
+            <div>
+                <h2 class="text-2xl font-serif gold-text mb-6 border-l-4 border-gold-600 pl-3 uppercase tracking-tighter" x-text="cat"></h2>
+                <div class="flex space-x-4 overflow-x-auto pb-4 no-scrollbar snap-x">
+                    <template x-for="i in 10" :key="i">
+                        <div @click="handleProductSelection(cat, i)" class="snap-start min-w-[200px] md:min-w-[250px] bg-[#0d0d0d] border border-gray-900 rounded-2xl overflow-hidden cursor-pointer hover:border-gold-600 transition">
+                            <img :src="`assets/${cat.toLowerCase().replace(' ', '_')}_${i}.jpg`" 
+                                 @error="$el.src='https://via.placeholder.com/400x600?text=Premium+Collection'"
+                                 class="h-72 w-full object-cover">
+                            <div class="p-4">
+                                <h3 class="font-bold text-gray-200" x-text="`Premium ${cat} #${i}`"></h3>
+                                <p class="gold-text font-bold mt-2">₹1,250</p>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </template>
+    </main>
+
+    <main x-show="page === 'profile'" x-cloak class="container mx-auto px-4 py-8">
+        <div class="max-w-xl mx-auto">
+            <div class="bg-gray-900/30 p-8 rounded-3xl border border-gold-900/20 text-center mb-8">
+                <div class="w-20 h-20 gold-bg rounded-full mx-auto flex items-center justify-center text-3xl text-black font-black mb-4">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+                <h2 class="text-xl font-bold uppercase tracking-widest" x-text="userPhone"></h2>
+                <button @click="logout()" class="mt-4 text-red-500 text-xs underline uppercase">Logout Session</button>
+            </div>
+
+            <h3 class="text-lg font-serif gold-text mb-6 border-b border-gray-800 pb-2 italic">Order History</h3>
+            <div class="space-y-4 text-center">
+                <template x-if="orders.length === 0">
+                    <p class="text-gray-600 py-10 italic">No orders yet.</p>
+                </template>
+                <template x-for="order in orders" :key="order.id">
+                    <div class="bg-gray-900/40 p-5 rounded-2xl border border-gray-800 flex justify-between items-center text-left">
+                        <div>
+                            <h4 class="font-bold gold-text" x-text="order.product"></h4>
+                            <p class="text-[10px] text-gray-500" x-text="order.date"></p>
+                            <span class="inline-block mt-2 text-[10px] bg-green-950 text-green-400 px-3 py-1 rounded-full font-bold uppercase" x-text="order.status"></span>
+                        </div>
+                        <div class="font-black text-lg">₹1,250</div>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </main>
+
+    <div x-show="authModal" x-cloak class="fixed inset-0 z-[100] flex items-center justify-center p-4 modal-blur">
+        <div class="bg-[#111] max-w-sm w-full rounded-3xl p-8 border border-white/10 text-center shadow-2xl">
+            <h2 class="text-2xl font-serif gold-text mb-6 italic uppercase font-black">Sign In</h2>
+            <input type="number" x-model="phoneInput" placeholder="Mobile Number" class="w-full bg-black border border-gray-800 p-4 rounded-xl mb-4 focus:border-gold-600 outline-none text-center font-bold tracking-widest">
+            <button @click="login()" class="w-full gold-bg text-black font-black py-4 rounded-xl">LOGIN TO CONTINUE</button>
+            <button @click="authModal = false" class="text-gray-500 text-xs mt-6">Return to Store</button>
+        </div>
+    </div>
+
+    <div x-show="checkoutModal" x-cloak class="fixed inset-0 z-[100] flex items-center justify-center p-4 modal-blur">
+        <div class="bg-[#111] max-w-lg w-full rounded-3xl overflow-hidden border border-gold-900/20">
+            <div class="p-6 border-b border-white/5 flex justify-between bg-gray-950">
+                <h2 class="font-bold gold-text tracking-widest uppercase">Checkout</h2>
+                <button @click="checkoutModal = false" class="text-gray-500"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <div class="p-6 space-y-6">
+                <div x-show="checkoutStep === 1" class="space-y-4">
+                    <input type="text" x-model="shipping.name" placeholder="Full Name" class="w-full bg-black border border-gray-800 p-4 rounded-xl outline-none">
+                    <textarea x-model="shipping.address" placeholder="Shipping Address (City & Pincode)" class="w-full bg-black border border-gray-800 p-4 rounded-xl h-32 outline-none"></textarea>
+                    <button @click="checkoutStep = 2" class="w-full gold-bg text-black font-black py-4 rounded-xl">NEXT: PAYMENT</button>
+                </div>
+
+                <div x-show="checkoutStep === 2" class="space-y-4">
+                    <div @click="payMethod = 'UPI'" :class="payMethod === 'UPI' ? 'border-gold-600 bg-gold-600/5' : 'border-gray-800'" class="p-5 border rounded-2xl cursor-pointer flex justify-between">
+                        <span>UPI (PhonePe / GPay)</span>
+                        <i :class="payMethod === 'UPI' ? 'fa-solid fa-circle-check gold-text' : 'fa-regular fa-circle'"></i>
+                    </div>
+                    <div @click="payMethod = 'COD'" :class="payMethod === 'COD' ? 'border-gold-600 bg-gold-600/5' : 'border-gray-800'" class="p-5 border rounded-2xl cursor-pointer flex justify-between">
+                        <span>Cash on Delivery (COD)</span>
+                        <i :class="payMethod === 'COD' ? 'fa-solid fa-circle-check gold-text' : 'fa-regular fa-circle'"></i>
+                    </div>
+                    <div class="pt-6 border-t border-gray-800 flex justify-between font-black text-2xl gold-text">
+                        <span>TOTAL</span><span>₹1,250</span>
+                    </div>
+                    <button @click="finishOrder()" class="w-full gold-bg text-black font-black py-4 rounded-xl">CONFIRM ORDER</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function qasrApp() {
+            return {
+                page: 'home',
+                authModal: false,
+                checkoutModal: false,
+                isLoggedIn: false,
+                userPhone: '',
+                phoneInput: '',
+                checkoutStep: 1,
+                payMethod: 'UPI',
+                selectedItem: null,
+                shipping: { name: '', address: '' },
+                orders: [],
+                sections: ['Kurta', 'Arabic Kurta', 'Burkha', 'Janamaz', 'Attar'],
+
+                // EMAILJS CONFIG - YAHAN APNE ID DAALEIN
+                emailConfig: {
+                    publicKey: "YOUR_PUBLIC_KEY",
+                    serviceId: "YOUR_SERVICE_ID",
+                    templateId: "YOUR_TEMPLATE_ID"
+                },
+
+                initApp() {
+                    emailjs.init(this.emailConfig.publicKey);
+                    const savedUser = localStorage.getItem('ql_user');
+                    if(savedUser) {
+                        this.isLoggedIn = true;
+                        this.userPhone = savedUser;
+                        this.orders = JSON.parse(localStorage.getItem('ql_orders_' + savedUser) || '[]');
+                    }
+                },
+
+                openProfile() {
+                    if(!this.isLoggedIn) this.authModal = true;
+                    else this.page = 'profile';
+                },
+
+                login() {
+                    if(this.phoneInput.length < 10) return alert("Valid number!");
+                    this.isLoggedIn = true;
+                    this.userPhone = "+91 " + this.phoneInput;
+                    localStorage.setItem('ql_user', this.userPhone);
+                    this.authModal = false;
+                    this.page = 'home';
+                },
+
+                handleProductSelection(cat, id) {
+                    if(!this.isLoggedIn) { this.authModal = true; return; }
+                    this.selectedItem = { name: `Premium ${cat} #${id}` };
+                    this.checkoutModal = true;
+                    this.checkoutStep = 1;
+                },
+
+                finishOrder() {
+                    if(!this.shipping.name || !this.shipping.address) return alert("Details complete karein!");
+                    
+                    const orderId = "ORD-" + Math.floor(Math.random() * 90000);
+                    const newOrder = {
+                        id: orderId,
+                        product: this.selectedItem.name,
+                        date: new Date().toLocaleDateString('en-IN'),
+                        status: 'Order Placed',
+                        price: '₹1,250'
+                    };
+
+                    this.orders.unshift(newOrder);
+                    localStorage.setItem('ql_orders_' + this.userPhone, JSON.stringify(this.orders));
+
+                    // SEND EMAIL
+                    emailjs.send(this.emailConfig.serviceId, this.emailConfig.templateId, {
+                        product: this.selectedItem.name,
+                        customer_name: this.shipping.name,
+                        customer_phone: this.userPhone,
+                        address: this.shipping.address,
+                        payment: this.payMethod,
+                        order_id: orderId
+                    });
+
+                    if(this.payMethod === 'UPI') {
+                        window.location.href = `upi://pay?pa=7385009275@fam&pn=QasrELibas&am=1250.00&cu=INR&tn=Order_${orderId}`;
+                    } else {
+                        alert("Barka-Allah! Order Placed.");
+                    }
+
+                    this.checkoutModal = false;
+                    this.page = 'profile';
+                },
+
+                logout() {
+                    localStorage.removeItem('ql_user');
+                    location.reload();
+                }
+            }
+        }
+    </script>
+</body>
+</html>
