@@ -63,25 +63,7 @@
 
         <div id="category-grid" class="grid grid-cols-2 gap-4"></div>
 
-        <footer class="mt-16 p-10 bg-white border-t text-center space-y-6">
-            <h2 class="hero-title text-gold text-2xl uppercase tracking-tighter">Zyra Collective</h2>
-            <div class="flex justify-center space-x-8 text-xl text-gray-400">
-    <a href="https://www.instagram.com/um3rx70target="_blank">
-        <i class="fab fa-instagram hover:text-[#E1306C] transition-colors"></i>
-    </a>
-
-    <a href="https://wa.me/917385009275" target="_blank">
-        <i class="fab fa-whatsapp hover:text-[#25D366] transition-colors"></i>
-    </a>
-            </div>
-            
-            <div class="text-[9px] uppercase tracking-[3px] opacity-40 leading-relaxed">
-                <p>Premium Modest Wear Boutique</p>
-                <p>© 2026 All Rights Reserved</p>
-            </div>
-        </footer>
-    </div>
-
+        
     <div id="product-view" class="app-section hidden p-5">
         <div class="flex items-center space-x-4 mb-6" onclick="showSection('home-page')">
             <i class="fas fa-arrow-left"></i> <h2 id="cat-title" class="hero-title text-xl uppercase"></h2>
@@ -94,7 +76,59 @@
         <div id="item-summary" class="bg-gray-50 p-6 rounded-3xl mb-6 border border-gold/10"></div>
         <form id="order-form" class="space-y-4">
             <input type="text" id="cust-name" placeholder="Full Name" class="w-full p-4 border rounded-2xl" required>
+            <input type="tel" id="cust-phone" placeholder="WhatsApp Number" cla        <footer class="mt-16 p-10 bg-white border-t text-center space-y-6">
+            <h2 class="hero-title text-gold text-2xl uppercase tracking-tighter">Zyra Collective</h2>
+            <div class="flex justify-center space-x-8 text-xl text-gray-400">
+                <a href="https://www.instagram.com/um3rx70" target="_blank">
+                    <i class="fab fa-instagram hover:text-[#E1306C] transition-colors"></i>
+                </a>
+                <a href="https://wa.me/917385009275" target="_blank">
+                    <i class="fab fa-whatsapp hover:text-[#25D366] transition-colors"></i>
+                </a>
+            </div>
+            <div class="text-[9px] uppercase tracking-[3px] opacity-40 leading-relaxed">
+                <p>Premium Modest Wear Boutique</p>
+                <p>© 2026 All Rights Reserved</p>
+            </div>
+        </footer>
+    </div> <div id="product-view" class="app-section hidden p-5">
+        <div class="flex items-center space-x-4 mb-6" onclick="showSection('home-page')">
+            <i class="fas fa-arrow-left"></i> <h2 id="cat-title" class="hero-title text-xl uppercase"></h2>
+        </div>
+        <div id="prod-list" class="grid gap-8"></div>
+    </div>
+
+    <div id="checkout-page" class="app-section hidden p-6">
+        <h2 class="hero-title text-2xl mb-6">Order Details</h2>
+        <div id="item-summary" class="bg-gray-50 p-6 rounded-3xl mb-6 border border-gold/10"></div>
+        <form id="order-form" class="space-y-4">
+            <input type="text" id="cust-name" placeholder="Full Name" class="w-full p-4 border rounded-2xl" required>
             <input type="tel" id="cust-phone" placeholder="WhatsApp Number" class="w-full p-4 border rounded-2xl" required>
+            <textarea id="cust-address" placeholder="Complete Address with Pincode" class="w-full p-4 border rounded-2xl h-24" required></textarea>
+            
+            <div class="p-4 bg-gray-50 rounded-2xl border">
+                <p class="text-[10px] font-bold uppercase mb-4 opacity-50">Select Payment Method</p>
+                <div class="space-y-3">
+                    <label class="flex items-center space-x-3 p-3 bg-white rounded-xl border">
+                        <input type="radio" name="pay-method" value="COD" checked onchange="toggleQR(false)">
+                        <span class="text-xs font-bold">Cash on Delivery (COD)</span>
+                    </label>
+                    <label class="flex items-center space-x-3 p-3 bg-white rounded-xl border">
+                        <input type="radio" name="pay-method" value="Online" onchange="toggleQR(true)">
+                        <span class="text-xs font-bold">Pay via QR / UPI</span>
+                    </label>
+                </div>
+            </div>
+
+            <div id="qr-section" class="hidden text-center p-6 bg-white border-2 border-dashed border-gold rounded-3xl">
+                <img src="images/paymentqr.png" class="w-48 mx-auto rounded-lg shadow-md" onerror="this.src='https://via.placeholder.com/200?text=Scan+to+Pay'">
+                <p class="text-[10px] mt-4 opacity-50 uppercase font-bold">Screenshot le kar upload karein ya WhatsApp karein</p>
+            </div>
+
+            <button type="submit" id="order-btn" class="w-full py-5 bg-black text-white rounded-2xl font-bold uppercase tracking-[3px]">Place Order</button>
+        </form>
+    </div>
+        ss="w-full p-4 border rounded-2xl" required>
             <textarea id="cust-address" placeholder="Complete Address with Pincode" class="w-full p-4 border rounded-2xl h-24" required></textarea>
             <div class="p-4 bg-gray-50 rounded-2xl border">
                 <p class="text-[10px] font-bold uppercase mb-4 opacity-50">Select Payment Method</p>
