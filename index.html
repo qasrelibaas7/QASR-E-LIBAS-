@@ -119,6 +119,11 @@
         <h2 class="hero-title text-2xl mb-6">Order History</h2>
         <div id="order-list" class="space-y-4"></div>
     </div>
+        <div id="policy-page" class="app-section hidden p-5">
+        <h2 id="pol-title" class="hero-title text-2xl mb-4">Policy</h2>
+        <div id="pol-body" class="bg-gray-50 p-6 rounded-2xl text-sm border opacity-70 leading-relaxed"></div>
+        <button onclick="showSection('home-page')" class="w-full mt-6 py-4 bg-black text-white rounded-xl uppercase font-bold">Back to Home</button>
+        </div>
 </main>
 
 <div class="fixed bottom-0 left-0 right-0 bg-white border-t p-4 flex justify-around items-center z-[2000]">
@@ -143,7 +148,7 @@
     let user = null;
     let currentItem = null;
 
-    const FORMSPREE_ID = "YOUR_ID"; // <--- CHANGE THIS
+    const FORMSPREE_ID = "mqkrpjov"; // <--- CHANGE THIS
 
     const productsData = {
         "Burkha": ["Classic Nida", "Lace Luxe", "Stone Work", "Dubai Style", "Butterfly", "Silk Edition", "Daily Cotton"],
@@ -173,13 +178,35 @@
         document.getElementById('overlay').classList.toggle('active', f);
     }
 
-    function showSection(id) {
-        if((id === 'profile-page' || id === 'checkout-page') && !user) { auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); return; }
-        document.querySelectorAll('.app-section').forEach(s => s.classList.add('hidden'));
-        document.getElementById(id).classList.remove('hidden');
-        toggleSidebar(false);
-        window.scrollTo(0,0);
+    function showSection(id, type) {
+    // Auth Check
+    if((id === 'profile-page' || id === 'checkout-page' || id === 'orders-page') && !user) { 
+        auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); 
+        return; 
     }
+
+    // Hide all sections
+    document.querySelectorAll('.app-section').forEach(s => s.classList.add('hidden'));
+    
+    // Show requested section
+    const target = document.getElementById(id);
+    if(target) target.classList.remove('hidden');
+
+    // Policy Logic
+    if(id === 'policy-page') {
+        document.getElementById('pol-title').innerText = type + " Policy";
+        document.getElementById('pol-body').innerText = type === 'Return' 
+            ? "Aap 7 din ke andar product return kar sakte hain agar wo kharab ya galat mila ho." 
+            : "Hum aapka data safe rakhte hain aur kisi third party ko nahi dete.";
+    }
+
+    // Order History Logic (Isse orders dikhne lagenge)
+    if(id === 'orders-page' && user) { fetchOrders(); }
+
+    toggleSidebar(false);
+    window.scrollTo(0,0);
+    }
+    
 
     function toggleQR(show) {
         document.getElementById('qr-section').classList.toggle('hidden', !show);
