@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zyra Collective | Luxury Modest Wear</title>
+    <title>Zyra Collective | Luxury Boutique</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -14,30 +14,30 @@
     <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-firestore-compat.js"></script>
 
     <style>
-        :root { --gold: #D4AF37; --bg: #ffffff; --text: #1a1a1a; }
-        .dark-mode { --bg: #121212; --text: #ffffff; }
-        body { font-family: 'Montserrat', sans-serif; background: var(--bg); color: var(--text); transition: 0.3s; margin: 0; overflow-x: hidden; }
+        :root { --gold: #D4AF37; --bg: #ffffff; --text: #1a1a1a; --gray: #f8f9fa; }
+        body { font-family: 'Montserrat', sans-serif; background: var(--bg); color: var(--text); margin: 0; overflow-x: hidden; }
         .hero-title { font-family: 'Playfair Display', serif; }
         .hidden { display: none !important; }
-        .section-active { animation: fadeIn 0.4s ease-in-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
-        /* Sidebar & Navigation */
-        .sidebar { transition: 0.4s; transform: translateX(-100%); z-index: 2000; position: fixed; inset: 0 0 0 0; width: 280px; background: var(--bg); border-right: 1px solid rgba(0,0,0,0.1); }
+        /* Navigation & Sidebar */
+        .sidebar { transition: 0.4s; transform: translateX(-100%); z-index: 2000; position: fixed; inset: 0 0 0 0; width: 280px; background: white; border-right: 1px solid #eee; }
         .sidebar.active { transform: translateX(0); }
-        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1500; display: none; }
+        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 1500; display: none; }
         .overlay.active { display: block; }
-        .nav-item.active { color: var(--gold); }
+        
+        .nav-active { color: var(--gold) !important; font-weight: 700; }
+        .section-fade { animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body class="pb-20">
 
-<nav class="bg-white dark:bg-[#1e1e1e] border-b dark:border-gray-800 p-4 flex justify-between items-center sticky top-0 z-[1000]">
+<nav class="bg-white border-b p-4 flex justify-between items-center sticky top-0 z-[1000]">
     <div class="flex items-center space-x-4">
         <i onclick="toggleSidebar()" class="fas fa-bars text-xl cursor-pointer"></i>
         <h1 class="text-xl hero-title font-bold text-gold">ZYRA</h1>
     </div>
-    <div id="auth-status" onclick="showSection('profile-page')">
+    <div id="top-auth-btn" onclick="showSection('profile-page')">
         <button class="text-[10px] font-bold border-b-2 border-gold uppercase">Login</button>
     </div>
 </nav>
@@ -51,109 +51,92 @@
         <p onclick="showSection('home-page')" class="cursor-pointer">Home</p>
         <p onclick="showSection('policy-page', 'Return')" class="cursor-pointer">Return Policy</p>
         <p onclick="showSection('policy-page', 'Privacy')" class="cursor-pointer">Privacy Policy</p>
-        <p onclick="showSection('settings-page')" class="cursor-pointer">Settings</p>
+        <p onclick="showSection('home-page')" class="cursor-pointer">Contact Us</p>
     </div>
 </div>
 <div id="overlay" class="overlay" onclick="toggleSidebar()"></div>
 
-<main id="content-area">
+<main id="main-content">
 
-    <div id="home-page" class="app-section section-active">
-        <div class="p-4"><div class="h-44 bg-gray-200 rounded-3xl overflow-hidden relative shadow-lg">
-            <img src="images/hero.png" class="w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/800x400?text=Luxury+Boutique'">
-            <div class="absolute inset-0 bg-black/20 flex items-center justify-center"><h2 class="text-2xl text-white hero-title">Modest Luxury</h2></div>
+    <div id="home-page" class="app-section section-fade">
+        <div class="p-4"><div class="h-44 bg-gray-100 rounded-3xl overflow-hidden relative">
+            <img src="images/hero.png" class="w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/800x400?text=Premium+Collection'">
+            <div class="absolute inset-0 bg-black/10 flex items-center justify-center"><h2 class="text-2xl text-white hero-title">Modest Luxury</h2></div>
         </div></div>
 
         <div class="p-4 grid grid-cols-2 gap-4">
-            <div onclick="openCat('Burkha', 'category1.png')" class="bg-[#f9f9f9] dark:bg-[#1e1e1e] p-2 rounded-2xl border dark:border-gray-800 text-center shadow-sm">
+            <div onclick="openCat('Burkha', 'category1.png')" class="bg-gray-50 p-2 rounded-2xl border text-center">
                 <img src="images/category1.png" class="h-40 w-full object-cover rounded-xl" onerror="this.src='https://via.placeholder.com/200x300?text=Burkha'">
                 <p class="mt-2 text-[10px] font-bold uppercase">Burkha</p>
             </div>
-            <div onclick="openCat('Abaya', 'category4.png')" class="bg-[#f9f9f9] dark:bg-[#1e1e1e] p-2 rounded-2xl border dark:border-gray-800 text-center shadow-sm">
+            <div onclick="openCat('Abaya', 'category4.png')" class="bg-gray-50 p-2 rounded-2xl border text-center">
                 <img src="images/category4.png" class="h-40 w-full object-cover rounded-xl" onerror="this.src='https://via.placeholder.com/200x300?text=Abaya'">
                 <p class="mt-2 text-[10px] font-bold uppercase">Abaya</p>
             </div>
-            <div onclick="openCat('Hijab', 'category3.png')" class="bg-[#f9f9f9] dark:bg-[#1e1e1e] p-2 rounded-2xl border dark:border-gray-800 text-center shadow-sm">
+            <div onclick="openCat('Hijab', 'category3.png')" class="bg-gray-50 p-2 rounded-2xl border text-center">
                 <img src="images/category3.png" class="h-40 w-full object-cover rounded-xl" onerror="this.src='https://via.placeholder.com/200x300?text=Hijab'">
                 <p class="mt-2 text-[10px] font-bold uppercase">Hijab</p>
             </div>
-            <div onclick="openCat('Kurta', 'category2.png')" class="bg-[#f9f9f9] dark:bg-[#1e1e1e] p-2 rounded-2xl border dark:border-gray-800 text-center shadow-sm">
+            <div onclick="openCat('Kurta', 'category2.png')" class="bg-gray-50 p-2 rounded-2xl border text-center">
                 <img src="images/category2.png" class="h-40 w-full object-cover rounded-xl" onerror="this.src='https://via.placeholder.com/200x300?text=Kurta'">
                 <p class="mt-2 text-[10px] font-bold uppercase">Kurta</p>
             </div>
-            <div onclick="openCat('Prayer Mat', 'category5.png')" class="bg-[#f9f9f9] dark:bg-[#1e1e1e] p-2 rounded-2xl border dark:border-gray-800 text-center shadow-sm">
+            <div onclick="openCat('Prayer Mat', 'category5.png')" class="bg-gray-50 p-2 rounded-2xl border text-center">
                 <img src="images/category5.png" class="h-40 w-full object-cover rounded-xl" onerror="this.src='https://via.placeholder.com/200x300?text=Prayer+Mat'">
                 <p class="mt-2 text-[10px] font-bold uppercase">Prayer Mat</p>
             </div>
-            <div onclick="openCat('Attar', 'category6.png')" class="bg-[#f9f9f9] dark:bg-[#1e1e1e] p-2 rounded-2xl border dark:border-gray-800 text-center shadow-sm">
+            <div onclick="openCat('Attar', 'category6.png')" class="bg-gray-50 p-2 rounded-2xl border text-center">
                 <img src="images/category6.png" class="h-40 w-full object-cover rounded-xl" onerror="this.src='https://via.placeholder.com/200x300?text=Attar'">
                 <p class="mt-2 text-[10px] font-bold uppercase">Attar</p>
             </div>
         </div>
 
-        <div class="p-6 mt-6 bg-[#f9f9f9] dark:bg-[#1e1e1e]">
-            <h3 class="hero-title text-xl text-center mb-6">Frequently Asked</h3>
-            <div class="space-y-3 max-w-lg mx-auto">
-                <details class="group bg-white dark:bg-[#252525] p-4 rounded-xl border dark:border-gray-700">
-                    <summary class="list-none font-bold text-xs flex justify-between items-center cursor-pointer">Tracking info? <i class="fas fa-plus text-[8px] group-open:rotate-45"></i></summary>
-                    <p class="text-[10px] mt-2 opacity-60">WhatsApp update will be sent after dispatch.</p>
-                </details>
+        <div class="p-6 bg-gray-50 mt-6">
+            <h3 class="hero-title text-xl text-center mb-6">FAQs</h3>
+            <div class="space-y-3">
+                <details class="bg-white p-4 rounded-xl border"><summary class="text-xs font-bold">Shipping Time?</summary><p class="text-[10px] mt-2 opacity-60">2-4 Business days.</p></details>
+                <details class="bg-white p-4 rounded-xl border"><summary class="text-xs font-bold">Return Policy?</summary><p class="text-[10px] mt-2 opacity-60">7 Days exchange available.</p></details>
             </div>
         </div>
 
-        <footer class="p-10 text-center space-y-4 border-t dark:border-gray-800">
-            <h2 class="hero-title text-xl text-gold">ZYRA</h2>
-            <div class="flex justify-center space-x-6 text-gray-400">
-                <i class="fab fa-instagram"></i><i class="fab fa-whatsapp"></i>
-            </div>
-            <p class="text-[8px] opacity-40 uppercase tracking-widest">© 2026 Zyra Collective Boutique</p>
+        <footer class="p-10 text-center border-t mt-10">
+            <h2 class="hero-title text-gold text-xl mb-4">ZYRA COLLECTIVE</h2>
+            <div class="flex justify-center space-x-6 text-gray-400 mb-4"><i class="fab fa-instagram"></i><i class="fab fa-whatsapp"></i></div>
+            <p class="text-[8px] opacity-40 tracking-widest uppercase">© 2026 Zyra Collective Luxury Boutique</p>
         </footer>
     </div>
 
-    <div id="orders-page" class="app-section hidden p-5 section-active">
-        <h2 class="hero-title text-2xl mb-6">Order History</h2>
-        <div id="orders-list" class="space-y-4"></div>
-    </div>
-
-    <div id="profile-page" class="app-section hidden p-5 section-active">
-        <div class="flex items-center space-x-4 mb-8 bg-white dark:bg-[#1e1e1e] p-6 rounded-3xl border shadow-sm">
-            <img id="user-img" src="" class="w-16 h-16 rounded-full border-2 border-gold">
-            <div><h3 id="user-name" class="font-bold text-lg">User</h3><p class="text-[10px] text-gold font-bold">Gold Member</p></div>
+    <div id="profile-page" class="app-section hidden p-5 section-fade">
+        <h2 class="hero-title text-2xl mb-6">My Account</h2>
+        <div class="flex items-center space-x-4 bg-gray-50 p-6 rounded-3xl border mb-6">
+            <img id="u-img" src="" class="w-16 h-16 rounded-full border-2 border-gold">
+            <div><h3 id="u-name" class="font-bold text-lg">Guest</h3><p class="text-[10px] text-gold font-bold">Member</p></div>
         </div>
-        <div class="bg-white dark:bg-[#1e1e1e] rounded-3xl border dark:border-gray-800 divide-y overflow-hidden shadow-sm">
+        <div class="bg-white border rounded-3xl divide-y overflow-hidden">
             <div onclick="showSection('orders-page')" class="p-5 flex justify-between items-center cursor-pointer"><span>My Orders</span><i class="fas fa-chevron-right opacity-20"></i></div>
-            <div onclick="showSection('settings-page')" class="p-5 flex justify-between items-center cursor-pointer"><span>Settings</span><i class="fas fa-chevron-right opacity-20"></i></div>
-            <div onclick="logoutUser()" class="p-5 text-red-500 font-bold cursor-pointer">Logout</div>
+            <div onclick="logout()" class="p-5 text-red-500 font-bold cursor-pointer">Logout</div>
         </div>
     </div>
 
-    <div id="settings-page" class="app-section hidden p-5 section-active">
-        <h2 class="hero-title text-2xl mb-6">Settings</h2>
-        <div class="bg-white dark:bg-[#1e1e1e] p-6 rounded-3xl border shadow-sm space-y-6">
-            <div class="flex justify-between items-center">
-                <span>Dark Mode</span>
-                <button onclick="toggleTheme()" class="w-10 h-5 bg-gray-200 dark:bg-gold rounded-full relative">
-                    <div class="absolute top-0.5 left-0.5 dark:translate-x-5 w-4 h-4 bg-white rounded-full transition"></div>
-                </button>
-            </div>
-            <div class="flex justify-between items-center"><span>Notifications</span><input type="checkbox" checked class="accent-gold"></div>
-        </div>
+    <div id="orders-page" class="app-section hidden p-5 section-fade">
+        <h2 class="hero-title text-2xl mb-6">My Orders</h2>
+        <div id="order-list" class="space-y-4"></div>
     </div>
 
-    <div id="policy-page" class="app-section hidden p-5 section-active">
-        <h2 id="policy-title" class="hero-title text-2xl mb-4">Policy</h2>
-        <div id="policy-text" class="bg-white dark:bg-[#1e1e1e] p-6 rounded-3xl border text-sm opacity-70 leading-relaxed"></div>
-        <button onclick="showSection('home-page')" class="mt-6 w-full py-4 bg-black text-white rounded-2xl font-bold uppercase text-[10px]">Back Home</button>
+    <div id="policy-page" class="app-section hidden p-5 section-fade">
+        <h2 id="pol-title" class="hero-title text-2xl mb-4">Policy</h2>
+        <p id="pol-body" class="bg-gray-50 p-6 rounded-2xl text-sm leading-relaxed opacity-70 border"></p>
+        <button onclick="showSection('home-page')" class="w-full mt-6 py-4 bg-black text-white rounded-xl font-bold uppercase text-[10px]">Back to Home</button>
     </div>
 
-    <div id="product-view" class="app-section hidden p-5 section-active">
-        <h2 id="view-cat-title" class="hero-title text-2xl mb-6">Collection</h2>
-        <div id="product-list" class="grid gap-6"></div>
+    <div id="product-view" class="app-section hidden p-5 section-fade">
+        <h2 id="cat-view-title" class="hero-title text-2xl mb-6">Collection</h2>
+        <div id="prod-container" class="grid gap-6"></div>
     </div>
 
 </main>
 
-<div class="fixed bottom-0 left-0 right-0 bg-white dark:bg-[#1e1e1e] border-t dark:border-gray-800 p-3 flex justify-around items-center z-[2000]">
+<div class="fixed bottom-0 left-0 right-0 bg-white border-t p-3 flex justify-around items-center z-[2000] shadow-lg">
     <div onclick="showSection('home-page')" id="nav-home" class="text-center cursor-pointer text-gold"><i class="fas fa-home text-lg"></i><p class="text-[8px] mt-1 font-bold">HOME</p></div>
     <div onclick="showSection('orders-page')" id="nav-orders" class="text-center cursor-pointer text-gray-400"><i class="fas fa-shopping-bag text-lg"></i><p class="text-[8px] mt-1 font-bold">ORDERS</p></div>
     <div onclick="showSection('profile-page')" id="nav-profile" class="text-center cursor-pointer text-gray-400"><i class="fas fa-user-circle text-lg"></i><p class="text-[8px] mt-1 font-bold">PROFILE</p></div>
@@ -172,100 +155,88 @@
     const db = firebase.firestore();
     const auth = firebase.auth();
 
-    let currentUser = null;
+    let user = null;
 
-    // Login Function (Google Popup)
-    function loginUser() {
-        const provider = new firebase.auth.GoogleAuthProvider();
-        auth.signInWithPopup(provider).catch(e => alert("Login failed!"));
+    // Login logic
+    function login() {
+        auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).catch(() => alert("Login Failed"));
     }
+    function logout() { auth.signOut().then(() => location.reload()); }
 
-    function logoutUser() { auth.signOut().then(() => location.reload()); }
-
-    // Page Switch Logic (STRICT LOGIN CHECK)
+    // Section Logic
     function showSection(id, sub = '') {
-        // Protected Sections check
-        if ((id === 'profile-page' || id === 'orders-page') && !currentUser) {
-            loginUser();
+        if((id === 'profile-page' || id === 'orders-page') && !user) {
+            login();
             return;
         }
-
         document.querySelectorAll('.app-section').forEach(s => s.classList.add('hidden'));
         document.getElementById(id).classList.remove('hidden');
-        
-        // Update Bottom Nav UI
+
+        // Nav UI
         document.querySelectorAll('.fixed.bottom-0 div').forEach(n => n.classList.replace('text-gold', 'text-gray-400'));
         if(id === 'home-page') document.getElementById('nav-home').classList.replace('text-gray-400', 'text-gold');
-        if(id === 'orders-page') {
-            document.getElementById('nav-orders').classList.replace('text-gray-400', 'text-gold');
-            fetchOrders();
-        }
+        if(id === 'orders-page') { document.getElementById('nav-orders').classList.replace('text-gray-400', 'text-gold'); fetchUserOrders(); }
         if(id === 'profile-page') document.getElementById('nav-profile').classList.replace('text-gray-400', 'text-gold');
 
         if(id === 'policy-page') {
-            document.getElementById('policy-title').innerText = sub + " Policy";
-            document.getElementById('policy-text').innerText = sub === 'Return' ? "7-Day Exchange available for defective items." : "Your privacy is our priority. No data sharing.";
+            document.getElementById('pol-title').innerText = sub + " Policy";
+            document.getElementById('pol-body').innerText = sub === 'Return' ? "Aap 7 dino ke andar exchange kar sakte hain." : "Zyra Boutique aapka data safe rakhta hai.";
         }
-        
         toggleSidebar(false);
         window.scrollTo(0,0);
     }
 
-    // Sidebar Toggle
     function toggleSidebar(f) {
         const s = document.getElementById('sidebar'), o = document.getElementById('overlay');
         if(f === false) { s.classList.remove('active'); o.classList.remove('active'); return; }
         s.classList.toggle('active'); o.classList.toggle('active');
     }
 
-    // Auth Observer
-    auth.onAuthStateChanged(user => {
-        currentUser = user;
-        const authStatus = document.getElementById('auth-status');
-        if(user) {
-            authStatus.innerHTML = `<img src="${user.photoURL}" class="w-8 h-8 rounded-full border border-gold">`;
-            document.getElementById('user-img').src = user.photoURL;
-            document.getElementById('user-name').innerText = user.displayName;
+    // Auth Change
+    auth.onAuthStateChanged(u => {
+        user = u;
+        if(u) {
+            document.getElementById('top-auth-btn').innerHTML = `<img src="${u.photoURL}" class="w-8 h-8 rounded-full border border-gold">`;
+            document.getElementById('u-img').src = u.photoURL;
+            document.getElementById('u-name').innerText = u.displayName;
         } else {
-            authStatus.innerHTML = `<button onclick="loginUser()" class="text-[10px] font-bold border-b-2 border-gold uppercase">Login</button>`;
+            document.getElementById('top-auth-btn').innerHTML = `<button onclick="login()" class="text-[10px] font-bold border-b-2 border-gold uppercase">Login</button>`;
         }
     });
 
-    // Load Products
+    // Load Items
     function openCat(name, img) {
         showSection('product-view');
-        document.getElementById('view-cat-title').innerText = name;
-        const list = document.getElementById('product-list');
-        list.innerHTML = '';
+        document.getElementById('cat-view-title').innerText = name;
+        const container = document.getElementById('prod-container');
+        container.innerHTML = '';
         for(let i=1; i<=3; i++) {
-            list.innerHTML += `<div class="bg-white dark:bg-[#1e1e1e] p-4 rounded-3xl border dark:border-gray-800 shadow-sm">
+            container.innerHTML += `<div class="bg-white p-4 rounded-3xl border shadow-sm">
                 <img src="images/${img}" class="w-full h-80 object-cover rounded-2xl" onerror="this.src='https://via.placeholder.com/300x400?text=${name}'">
                 <div class="mt-4 flex justify-between items-center">
                     <div><h4 class="font-bold text-sm">Zyra ${name} Vol ${i}</h4><p class="text-gold font-bold">₹899</p></div>
-                    <button class="bg-black text-white px-6 py-2 rounded-xl text-xs font-bold uppercase">Buy</button>
+                    <button class="bg-black text-white px-6 py-2 rounded-xl text-xs font-bold">BUY</button>
                 </div>
             </div>`;
         }
     }
 
-    // Fetch User Orders
-    async function fetchOrders() {
-        const list = document.getElementById('orders-list');
-        list.innerHTML = '<p class="text-center py-10 opacity-50">Checking orders...</p>';
-        const snap = await db.collection("orders").where("Client", "==", currentUser.displayName).get();
+    // Orders Fetch
+    async function fetchUserOrders() {
+        const list = document.getElementById('order-list');
+        list.innerHTML = '<p class="text-center py-10 opacity-40">Searching orders...</p>';
+        const snap = await db.collection("orders").where("Client", "==", user.displayName).get();
         if(snap.empty) { list.innerHTML = '<p class="text-center py-20 opacity-30">No orders found.</p>'; return; }
         list.innerHTML = '';
         snap.forEach(doc => {
             const d = doc.data();
-            list.innerHTML += `<div class="p-4 bg-white dark:bg-[#1e1e1e] border dark:border-gray-800 rounded-2xl shadow-sm">
-                <p class="text-[9px] text-gold font-bold uppercase">Processing</p>
+            list.innerHTML += `<div class="p-4 bg-white border rounded-2xl shadow-sm">
+                <p class="text-[9px] text-gold font-bold">CONFIRMED</p>
                 <h4 class="font-bold text-sm">${d.Item || d.Product}</h4>
                 <p class="text-gold font-bold text-sm mt-1">${d.Total}</p>
             </div>`;
         });
     }
-
-    function toggleTheme() { document.body.classList.toggle('dark-mode'); }
 </script>
 </body>
 </html>
