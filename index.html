@@ -217,23 +217,29 @@
     });
 
     function openCat(name) {
-        showSection('product-view');
-        document.getElementById('cat-title').innerText = name;
-        const list = document.getElementById('prod-list');
-        list.innerHTML = '';
-        productsData[name].forEach((p, i) => {
-            const pImg = `images/${name.toLowerCase()}${i + 1}.png`; 
-            list.innerHTML += `
-            <div class="bg-white p-4 rounded-3xl border shadow-sm">
-                <img src="${pImg}" class="w-full h-80 object-cover rounded-2xl" onerror="this.src='https://via.placeholder.com/400?text=${p}'">
-                <div class="mt-4 flex justify-between items-center">
-                    <div><h4 class="font-bold text-sm uppercase">${p}</h4><p class="text-gold font-bold">₹1,299</p></div>
-                    <button onclick="startCheckout('${p}', '₹1,299')" class="bg-black text-white px-6 py-2 rounded-xl text-[10px] font-bold uppercase">Buy Now</button>
-                </div>
-            </div>`;
-        });
-    }
+    showSection('product-view');
+    document.getElementById('cat-title').innerText = name;
+    const list = document.getElementById('prod-list');
+    list.innerHTML = '';
 
+    productsData[name].forEach((item, i) => {
+        // Image ka naam wahi rahega: burkha1.png, burkha2.png...
+        const pImg = `images/${name.toLowerCase()}${i + 1}.png`; 
+        
+        list.innerHTML += `
+        <div class="bg-white p-4 rounded-3xl border shadow-sm">
+            <img src="${pImg}" class="w-full h-80 object-cover rounded-2xl" onerror="this.src='https://via.placeholder.com/400?text=${item.name}'">
+            <div class="mt-4 flex justify-between items-center">
+                <div>
+                    <h4 class="font-bold text-sm uppercase">${item.name}</h4>
+                    <p class="text-gold font-bold">${item.price}</p> 
+                </div>
+                <button onclick="startCheckout('${item.name}', '${item.price}')" class="bg-black text-white px-6 py-2 rounded-xl text-[10px] font-bold uppercase">Buy Now</button>
+            </div>
+        </div>`;
+    });
+    }
+    
     function startCheckout(name, price) {
         currentItem = { name, price };
         showSection('checkout-page');
