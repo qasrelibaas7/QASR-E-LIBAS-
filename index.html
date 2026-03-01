@@ -14,140 +14,102 @@
     <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-firestore-compat.js"></script>
 
     <style>
-        :root { --gold: #D4AF37; --bg: #f8f9fa; }
-        body { font-family: 'Montserrat', sans-serif; background: var(--bg); overflow-x: hidden; }
+        :root { --gold: #D4AF37; --bg: #f8f9fa; --text: #1a1a1a; --card: #ffffff; }
+        .dark { --bg: #121212; --text: #f8f9fa; --card: #1e1e1e; }
+        
+        body { font-family: 'Montserrat', sans-serif; background: var(--bg); color: var(--text); transition: 0.3s; }
         .hero-title { font-family: 'Playfair Display', serif; }
-        
-        .page-transition { animation: slideUp 0.4s cubic-bezier(0, 0, 0.2, 1); }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        
         .hidden-section { display: none !important; }
-        .nav-item.active { color: var(--gold); border-top: 2px solid var(--gold); }
         
-        /* Sliding Line UI */
-        .menu-item { position: relative; overflow: hidden; transition: 0.3s; }
-        .menu-item::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px; background: var(--gold); transition: 0.3s; }
-        .menu-item:active::after { width: 100%; }
+        /* Page Transition Animation */
+        .page-view { animation: slideIn 0.4s ease-out; position: fixed; inset: 0; background: var(--bg); z-index: 100; overflow-y: auto; padding-bottom: 80px; }
+        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
 
-        #sidebar { transition: 0.4s; transform: translateX(-100%); z-index: 5000; }
+        /* Dark Mode Toggle Switch */
+        .switch { position: relative; display: inline-block; width: 40px; height: 20px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; inset: 0; background-color: #ccc; transition: .4s; border-radius: 20px; }
+        .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--gold); }
+        input:checked + .slider:before { transform: translateX(20px); }
+
+        #sidebar { transition: 0.4s; transform: translateX(-100%); z-index: 1000; }
         #sidebar.active { transform: translateX(0); }
     </style>
 </head>
-<body class="pb-24">
+<body class="pb-20">
 
-<div id="sidebar" class="fixed inset-y-0 left-0 w-72 bg-white shadow-2xl p-6">
-    <div class="flex justify-between items-center mb-8 border-b pb-4">
-        <h2 class="hero-title text-xl text-gold">Zyra Collective</h2>
-        <i onclick="toggleMenu()" class="fas fa-times text-xl"></i>
-    </div>
-    <div class="space-y-6 text-sm font-bold uppercase tracking-widest text-gray-600">
-        <p onclick="location.reload()">Home</p>
-        <p onclick="alert('Return Policy: 7 Days Exchange')">Return Policy</p>
-        <p onclick="alert('Privacy: Your data is 100% safe')">Privacy Policy</p>
-        <p onclick="window.location.href='https://wa.me/917385009275'">Contact Us</p>
-    </div>
-</div>
-<div id="overlay" onclick="toggleMenu()" class="fixed inset-0 bg-black/40 z-[4000] hidden-section"></div>
-
-<nav class="bg-white p-4 flex justify-between items-center sticky top-0 z-50 shadow-sm">
+<nav class="bg-white dark:bg-[#1e1e1e] p-4 flex justify-between items-center sticky top-0 z-[50] shadow-sm">
     <div class="flex items-center space-x-4">
         <i onclick="toggleMenu()" class="fas fa-bars text-xl cursor-pointer"></i>
-        <h1 class="text-xl hero-title font-bold">ZYRA</h1>
+        <h1 class="text-xl hero-title font-bold text-gold">ZYRA</h1>
     </div>
-    <div id="auth-ui" onclick="openAccount()">
+    <div id="auth-ui" onclick="navigateTo('profile-page')">
         <button class="text-[10px] font-bold border-b-2 border-gold uppercase">Login</button>
     </div>
 </nav>
 
-<div id="home-view" class="page-transition">
-    <section class="h-60 bg-gray-200 relative">
-        <img src="images/hero.png" class="w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/800x400?text=Zyra+Boutique'">
-        <div class="absolute inset-0 bg-black/20 flex items-center justify-center text-white">
-            <h2 class="text-3xl hero-title">Modest Luxury</h2>
-        </div>
+<div id="sidebar" class="fixed inset-y-0 left-0 w-72 bg-white dark:bg-[#1e1e1e] shadow-2xl p-6">
+    <div class="flex justify-between items-center mb-10 border-b pb-4">
+        <h2 class="hero-title text-gold text-xl">Menu</h2>
+        <i onclick="toggleMenu()" class="fas fa-times text-xl"></i>
+    </div>
+    <div class="space-y-6 text-sm font-bold uppercase tracking-widest">
+        <p onclick="location.reload()" class="cursor-pointer">Home</p>
+        <p onclick="navigateTo('policy-page', 'Return')" class="cursor-pointer">Return Policy</p>
+        <p onclick="navigateTo('policy-page', 'Privacy')" class="cursor-pointer">Privacy Policy</p>
+        <p onclick="navigateTo('settings-page')" class="cursor-pointer">Settings</p>
+    </div>
+</div>
+<div id="overlay" onclick="toggleMenu()" class="fixed inset-0 bg-black/40 z-[900] hidden-section"></div>
+
+<div id="home-page">
+    <section class="h-60 bg-gray-200 relative overflow-hidden">
+        <img src="images/hero.png" class="w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/800x400?text=Luxury+Boutique'">
+        <div class="absolute inset-0 bg-black/30 flex items-center justify-center"><h2 class="text-3xl text-white hero-title">Modest Luxury</h2></div>
     </section>
 
     <div class="p-4 grid grid-cols-2 gap-4">
-        <div onclick="openCategory('Burkha')" class="bg-white rounded-2xl shadow-sm border overflow-hidden p-2">
-            <img src="images/burkha.png" class="h-40 w-full object-cover rounded-xl" onerror="this.src='https://via.placeholder.com/200x300?text=Burkha'">
-            <p class="mt-2 text-center text-[10px] font-bold uppercase">Burkha</p>
+        <div onclick="openCategory('Burkha')" class="bg-white dark:bg-[#1e1e1e] rounded-2xl shadow-sm border dark:border-gray-800 p-2 text-center">
+            <img src="images/category1.png" class="h-40 w-full object-cover rounded-xl" onerror="this.src='https://via.placeholder.com/200x300?text=Burkha'">
+            <p class="mt-2 text-[10px] font-bold uppercase">Burkha</p>
         </div>
-        <div onclick="openCategory('Abaya')" class="bg-white rounded-2xl shadow-sm border overflow-hidden p-2">
-            <img src="images/abaya.png" class="h-40 w-full object-cover rounded-xl" onerror="this.src='https://via.placeholder.com/200x300?text=Abaya'">
-            <p class="mt-2 text-center text-[10px] font-bold uppercase">Abaya</p>
+        <div onclick="openCategory('Abaya')" class="bg-white dark:bg-[#1e1e1e] rounded-2xl shadow-sm border dark:border-gray-800 p-2 text-center">
+            <img src="images/category4.png" class="h-40 w-full object-cover rounded-xl" onerror="this.src='https://via.placeholder.com/200x300?text=Abaya'">
+            <p class="mt-2 text-[10px] font-bold uppercase">Abaya</p>
         </div>
-        <div onclick="openCategory('Hijab')" class="bg-white rounded-2xl shadow-sm border overflow-hidden p-2">
-            <img src="images/hijab.png" class="h-40 w-full object-cover rounded-xl" onerror="this.src='https://via.placeholder.com/200x300?text=Hijab'">
-            <p class="mt-2 text-center text-[10px] font-bold uppercase">Hijab</p>
+        <div onclick="openCategory('Hijab')" class="bg-white dark:bg-[#1e1e1e] rounded-2xl shadow-sm border dark:border-gray-800 p-2 text-center">
+            <img src="images/category3.png" class="h-40 w-full object-cover rounded-xl" onerror="this.src='https://via.placeholder.com/200x300?text=Hijab'">
+            <p class="mt-2 text-[10px] font-bold uppercase">Hijab</p>
         </div>
-        <div onclick="openCategory('Kurta')" class="bg-white rounded-2xl shadow-sm border overflow-hidden p-2">
-            <img src="images/kurta.png" class="h-40 w-full object-cover rounded-xl" onerror="this.src='https://via.placeholder.com/200x300?text=Kurta'">
-            <p class="mt-2 text-center text-[10px] font-bold uppercase">Kurta</p>
+        <div onclick="openCategory('Kurta')" class="bg-white dark:bg-[#1e1e1e] rounded-2xl shadow-sm border dark:border-gray-800 p-2 text-center">
+            <img src="images/category2.png" class="h-40 w-full object-cover rounded-xl" onerror="this.src='https://via.placeholder.com/200x300?text=Kurta'">
+            <p class="mt-2 text-[10px] font-bold uppercase">Kurta</p>
+        </div>
+        <div onclick="openCategory('Prayer Mat')" class="bg-white dark:bg-[#1e1e1e] rounded-2xl shadow-sm border dark:border-gray-800 p-2 text-center">
+            <img src="images/category5.png" class="h-40 w-full object-cover rounded-xl" onerror="this.src='https://via.placeholder.com/200x300?text=Prayer+Mat'">
+            <p class="mt-2 text-[10px] font-bold uppercase">Prayer Mat</p>
+        </div>
+        <div onclick="openCategory('Attar')" class="bg-white dark:bg-[#1e1e1e] rounded-2xl shadow-sm border dark:border-gray-800 p-2 text-center">
+            <img src="images/category6.png" class="h-40 w-full object-cover rounded-xl" onerror="this.src='https://via.placeholder.com/200x300?text=Attar'">
+            <p class="mt-2 text-[10px] font-bold uppercase">Attar</p>
         </div>
     </div>
 </div>
 
-<div id="product-view" class="hidden-section p-5 page-transition">
-    <button onclick="showHome()" class="mb-5 text-gray-400 font-bold text-xs"><i class="fas fa-arrow-left"></i> BACK</button>
-    <div id="product-list" class="space-y-6"></div>
-</div>
-
-<div id="checkout-view" class="hidden-section fixed inset-0 bg-white z-[1000] p-6 overflow-y-auto">
-    <h2 class="hero-title text-2xl mb-6">Checkout</h2>
-    <div class="space-y-4">
-        <input type="text" id="c-name" placeholder="Full Name" class="w-full border p-4 rounded-xl outline-none">
-        <input type="tel" id="c-phone" placeholder="WhatsApp Number" class="w-full border p-4 rounded-xl outline-none">
-        <textarea id="c-addr" placeholder="Full Address" class="w-full border p-4 rounded-xl h-24 outline-none"></textarea>
-        <select id="c-pay" class="w-full border p-4 rounded-xl font-bold bg-white">
-            <option value="COD">Cash on Delivery</option>
-            <option value="UPI">Pay Online (15% Discount)</option>
-        </select>
-        <button onclick="placeOrder()" id="order-btn" class="w-full bg-black text-white py-5 rounded-xl font-bold uppercase tracking-widest">Confirm Order</button>
-        <button onclick="closeCheckout()" class="w-full text-gray-400 text-xs mt-2">Cancel</button>
+<div id="page-view" class="page-view hidden-section">
+    <div class="p-4 border-b flex items-center space-x-4 bg-white dark:bg-[#1e1e1e] sticky top-0">
+        <i onclick="closeView()" class="fas fa-arrow-left text-lg"></i>
+        <h2 id="view-title" class="font-bold uppercase text-sm tracking-widest">Page Title</h2>
     </div>
-</div>
-
-<div id="orders-view" class="hidden-section fixed inset-0 bg-white z-[500] overflow-y-auto page-transition">
-    <div class="p-4 border-b flex items-center space-x-4 bg-white sticky top-0">
-        <i onclick="showHome()" class="fas fa-arrow-left text-lg"></i>
-        <h2 class="font-bold uppercase text-sm tracking-widest">My Orders</h2>
-    </div>
-    <div id="orders-list" class="p-4 space-y-4">
+    <div id="view-content" class="p-5">
         </div>
 </div>
 
-<div id="profile-view" class="hidden-section fixed inset-0 bg-[#f8f9fa] z-[400] overflow-y-auto page-transition">
-    <div class="bg-white p-4 border-b flex items-center space-x-4">
-        <i onclick="showHome()" class="fas fa-arrow-left text-lg"></i>
-        <h2 class="font-bold text-sm uppercase">Account</h2>
-    </div>
-    <div class="bg-white p-6 flex items-center space-x-4 border-b mb-2">
-        <img id="p-img" src="" class="w-16 h-16 rounded-full border-2 border-gold">
-        <div><h3 id="p-name" class="font-bold text-lg">User</h3><p class="text-xs text-gray-400">Zyra Gold Member</p></div>
-    </div>
-    <div class="bg-white divide-y">
-        <div onclick="showOrders()" class="menu-item p-5 flex items-center justify-between"><div class="flex items-center space-x-4"><i class="fas fa-box text-gold"></i><span class="text-sm font-semibold">My Orders</span></div><i class="fas fa-chevron-right text-gray-300"></i></div>
-        <div onclick="showSettings()" class="menu-item p-5 flex items-center justify-between"><div class="flex items-center space-x-4"><i class="fas fa-cog text-gray-500"></i><span class="text-sm font-semibold">Settings</span></div><i class="fas fa-chevron-right text-gray-300"></i></div>
-        <div onclick="handleLogout()" class="p-5 flex items-center space-x-4 text-red-500 font-bold"><i class="fas fa-sign-out-alt"></i><span>Logout</span></div>
-    </div>
-</div>
-
-<div id="settings-view" class="hidden-section fixed inset-0 bg-[#f8f9fa] z-[600] page-transition">
-    <div class="bg-white p-4 border-b flex items-center space-x-4">
-        <i onclick="openAccount()" class="fas fa-arrow-left text-lg"></i>
-        <h2 class="font-bold text-sm uppercase">Settings</h2>
-    </div>
-    <div class="mt-4 bg-white divide-y">
-        <div class="p-4 flex items-center justify-between"><span>WhatsApp Updates</span><input type="checkbox" checked class="accent-gold w-5 h-5"></div>
-        <div class="p-4 flex items-center justify-between"><span>Dark Mode (Beta)</span><input type="checkbox" class="accent-gold w-5 h-5"></div>
-        <div class="p-4 text-center text-[10px] text-gray-300 tracking-widest uppercase">Version 1.0.1</div>
-    </div>
-</div>
-
-<div class="fixed bottom-0 left-0 right-0 bg-white border-t p-3 flex justify-around items-center z-[1000] shadow-2xl">
-    <div onclick="showHome()" id="nav-home" class="nav-item text-center cursor-pointer active"><i class="fas fa-home text-lg"></i><p class="text-[8px] font-bold">HOME</p></div>
-    <div onclick="showOrders()" id="nav-orders" class="nav-item text-center cursor-pointer text-gray-300"><i class="fas fa-shopping-bag text-lg"></i><p class="text-[8px] font-bold">ORDERS</p></div>
-    <div onclick="openAccount()" id="nav-profile" class="nav-item text-center cursor-pointer text-gray-300"><i class="fas fa-user text-lg"></i><p class="text-[8px] font-bold">PROFILE</p></div>
+<div class="fixed bottom-0 left-0 right-0 bg-white dark:bg-[#1e1e1e] border-t dark:border-gray-800 p-3 flex justify-around items-center z-[1000]">
+    <div onclick="location.reload()" class="text-center text-gold"><i class="fas fa-home text-lg"></i><p class="text-[8px] font-bold">HOME</p></div>
+    <div onclick="navigateTo('orders-page')" class="text-center text-gray-400"><i class="fas fa-shopping-bag text-lg"></i><p class="text-[8px] font-bold">ORDERS</p></div>
+    <div onclick="navigateTo('profile-page')" class="text-center text-gray-400"><i class="fas fa-user text-lg"></i><p class="text-[8px] font-bold">PROFILE</p></div>
 </div>
 
 <script>
@@ -165,93 +127,112 @@
     const auth = firebase.auth();
 
     let currentUser = null;
-    let selectedItem = "";
-    let itemPrice = 0;
 
-    // View Manager (No Mistakes)
-    function hideAll() {
-        ['home-view', 'product-view', 'orders-view', 'profile-view', 'settings-view'].forEach(id => document.getElementById(id).classList.add('hidden-section'));
-        ['nav-home', 'nav-orders', 'nav-profile'].forEach(id => document.getElementById(id).classList.replace('text-gold', 'text-gray-300'));
-        ['nav-home', 'nav-orders', 'nav-profile'].forEach(id => document.getElementById(id).classList.remove('active'));
+    // Dark Mode Logic
+    if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
+
+    function toggleDarkMode() {
+        document.body.classList.toggle('dark');
+        localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
     }
 
-    function showHome() { hideAll(); document.getElementById('home-view').classList.remove('hidden-section'); document.getElementById('nav-home').classList.add('active'); }
-    function showOrders() { 
-        if(!currentUser) { handleLogin(); return; }
-        hideAll(); 
-        document.getElementById('orders-view').classList.remove('hidden-section'); 
-        document.getElementById('nav-orders').classList.add('active');
-        fetchOrders();
-    }
-    function openAccount() { if(!currentUser) { handleLogin(); return; } hideAll(); document.getElementById('profile-view').classList.remove('hidden-section'); document.getElementById('nav-profile').classList.add('active'); }
-    function showSettings() { hideAll(); document.getElementById('settings-view').classList.remove('hidden-section'); }
+    // View Navigation Logic (The Sliding Line & New Pages)
+    function navigateTo(page, subType = '') {
+        const view = document.getElementById('page-view');
+        const title = document.getElementById('view-title');
+        const content = document.getElementById('view-content');
+        
+        view.classList.remove('hidden-section');
+        content.innerHTML = '';
 
-    // Auth logic
-    auth.onAuthStateChanged(user => {
-        if(user) {
-            currentUser = user;
-            document.getElementById('auth-ui').innerHTML = `<img src="${user.photoURL}" class="w-8 h-8 rounded-full border border-gold">`;
-            document.getElementById('p-img').src = user.photoURL;
-            document.getElementById('p-name').innerText = user.displayName;
+        if (page === 'policy-page') {
+            title.innerText = subType + " Policy";
+            content.innerHTML = `<div class="bg-white dark:bg-[#1e1e1e] p-6 rounded-2xl shadow-sm border dark:border-gray-800">
+                <p class="text-sm leading-relaxed">${subType} policy ki details yahan aayengi. Hamara boutique modest wear ke liye best hai.</p>
+            </div>`;
+        } else if (page === 'settings-page') {
+            title.innerText = "Settings";
+            content.innerHTML = `
+                <div class="bg-white dark:bg-[#1e1e1e] divide-y dark:divide-gray-800 rounded-2xl overflow-hidden shadow-sm">
+                    <div class="p-5 flex justify-between items-center">
+                        <div><p class="text-sm font-bold">Dark Mode</p><p class="text-[10px] text-gray-400">Reduce glare</p></div>
+                        <label class="switch"><input type="checkbox" onchange="toggleDarkMode()" ${document.body.classList.contains('dark') ? 'checked' : ''}><span class="slider"></span></label>
+                    </div>
+                    <div class="p-5 flex justify-between items-center">
+                        <div><p class="text-sm font-bold">Notifications</p><p class="text-[10px] text-gray-400">Order updates on WhatsApp</p></div>
+                        <input type="checkbox" checked class="w-5 h-5 accent-gold">
+                    </div>
+                    <div class="p-5 text-center text-[10px] text-gray-400 uppercase tracking-widest">Version 1.0.1</div>
+                </div>`;
+        } else if (page === 'profile-page') {
+            if(!currentUser) { handleLogin(); return; }
+            title.innerText = "My Account";
+            content.innerHTML = `
+                <div class="bg-white dark:bg-[#1e1e1e] p-6 flex items-center space-x-4 mb-4 rounded-2xl shadow-sm">
+                    <img src="${currentUser.photoURL}" class="w-16 h-16 rounded-full border-2 border-gold">
+                    <div><h3 class="font-bold text-lg">${currentUser.displayName}</h3><p class="text-xs text-gray-400">Boutique Member</p></div>
+                </div>
+                <div class="bg-white dark:bg-[#1e1e1e] divide-y dark:divide-gray-800 rounded-2xl shadow-sm">
+                    <div onclick="navigateTo('orders-page')" class="p-5 flex justify-between items-center"><span>My Orders</span><i class="fas fa-chevron-right text-gray-300"></i></div>
+                    <div onclick="navigateTo('settings-page')" class="p-5 flex justify-between items-center"><span>Settings</span><i class="fas fa-chevron-right text-gray-300"></i></div>
+                    <div onclick="handleLogout()" class="p-5 text-red-500 font-bold">Logout</div>
+                </div>`;
+        } else if (page === 'orders-page') {
+            if(!currentUser) { handleLogin(); return; }
+            title.innerText = "Order History";
+            fetchOrders(content);
         }
+        toggleMenu(false);
+    }
+
+    function closeView() { document.getElementById('page-view').classList.add('hidden-section'); }
+    function toggleMenu(force) {
+        const side = document.getElementById('sidebar');
+        const over = document.getElementById('overlay');
+        if (force === false) { side.classList.remove('active'); over.classList.add('hidden-section'); return; }
+        side.classList.toggle('active');
+        over.classList.toggle('hidden-section');
+    }
+
+    // Auth & Orders Fetch
+    auth.onAuthStateChanged(user => { 
+        currentUser = user; 
+        if(user) document.getElementById('auth-ui').innerHTML = `<img src="${user.photoURL}" class="w-8 h-8 rounded-full border border-gold">`;
     });
     function handleLogin() { auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); }
     function handleLogout() { auth.signOut().then(() => location.reload()); }
-    function toggleMenu() { document.getElementById('sidebar').classList.toggle('active'); document.getElementById('overlay').classList.toggle('hidden-section'); }
 
-    // Category & Checkout
-    function openCategory(cat) {
-        hideAll();
-        document.getElementById('product-view').classList.remove('hidden-section');
-        let list = document.getElementById('product-list');
-        list.innerHTML = '';
-        let price = (cat === 'Attar') ? 299 : 899;
-        for(let i=1; i<=4; i++) {
-            let name = `Zyra ${cat} - Vol ${i}`;
-            list.innerHTML += `<div class="bg-white p-4 rounded-2xl border shadow-sm">
-                <img src="images/item.png" class="w-full h-80 object-cover rounded-xl" onerror="this.src='https://via.placeholder.com/300?text=${cat}'">
-                <div class="mt-4 flex justify-between items-center">
-                    <div><h4 class="font-bold text-sm">${name}</h4><p class="text-gold font-bold">₹${price}</p></div>
-                    <button onclick="startCheckout('${name}', ${price})" class="bg-black text-white px-6 py-2 rounded-lg text-xs font-bold">BUY</button>
-                </div>
-            </div>`;
-        }
-    }
-    function startCheckout(name, price) { selectedItem = name; itemPrice = price; document.getElementById('checkout-view').classList.remove('hidden-section'); }
-    function closeCheckout() { document.getElementById('checkout-view').classList.add('hidden-section'); }
-
-    async function placeOrder() {
-        const name = document.getElementById('c-name').value;
-        const phone = document.getElementById('c-phone').value;
-        const addr = document.getElementById('c-addr').value;
-        const pay = document.getElementById('c-pay').value;
-
-        if(!name || !phone || !addr) return alert("Details bharo bhai!");
-        
-        const orderData = { Client: name, Item: selectedItem, WhatsApp: phone, Address: addr, Total: "₹" + itemPrice, Timestamp: new Date().toLocaleString() };
-
-        try {
-            await db.collection("orders").add(orderData);
-            await fetch("https://formspree.io/f/mkovazzj", { method: "POST", body: JSON.stringify(orderData), headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' } });
-            alert("Order Success!");
-            location.reload();
-        } catch (e) { alert("Error!"); }
-    }
-
-    async function fetchOrders() {
-        const list = document.getElementById('orders-list');
-        list.innerHTML = '<p class="text-center text-xs py-10">Loading orders...</p>';
-        const snapshot = await db.collection("orders").where("Client", "==", currentUser.displayName).get();
-        if(snapshot.empty) { list.innerHTML = '<p class="text-center py-20 text-gray-300">No Orders Found</p>'; return; }
-        list.innerHTML = '';
-        snapshot.forEach(doc => {
-            const data = doc.data();
-            list.innerHTML += `<div class="bg-white border rounded-xl p-4 shadow-sm">
-                <div class="flex justify-between border-b pb-2 mb-2"><span class="text-[10px] font-bold text-gold">CONFIRMED</span><span class="text-[9px] text-gray-400">${data.Timestamp}</span></div>
-                <h4 class="font-bold text-sm">${data.Item}</h4>
-                <p class="text-gold font-bold text-sm mt-1">${data.Total}</p>
+    async function fetchOrders(container) {
+        container.innerHTML = '<p class="text-center text-xs py-10">Searching orders...</p>';
+        const snap = await db.collection("orders").where("Client", "==", currentUser.displayName).get();
+        if(snap.empty) { container.innerHTML = '<p class="text-center py-20 text-gray-400">No orders yet.</p>'; return; }
+        container.innerHTML = '';
+        snap.forEach(doc => {
+            const d = doc.data();
+            container.innerHTML += `<div class="bg-white dark:bg-[#1e1e1e] p-4 rounded-xl border dark:border-gray-800 mb-3">
+                <p class="text-[10px] text-gold font-bold">ORDERED</p>
+                <h4 class="font-bold text-sm">${d.Item || d.Product}</h4>
+                <p class="text-gold font-bold text-sm mt-1">${d.Total}</p>
             </div>`;
         });
+    }
+
+    // Category
+    function openCategory(cat) {
+        const view = document.getElementById('page-view');
+        const title = document.getElementById('view-title');
+        const content = document.getElementById('view-content');
+        view.classList.remove('hidden-section');
+        title.innerText = cat;
+        content.innerHTML = `<div class="grid gap-6">
+            <div class="bg-white dark:bg-[#1e1e1e] p-4 rounded-2xl border dark:border-gray-800">
+                <img src="images/item.png" class="w-full h-80 object-cover rounded-xl" onerror="this.src='https://via.placeholder.com/400x600?text=${cat}'">
+                <div class="mt-4 flex justify-between items-center">
+                    <h4 class="font-bold">${cat} Premium</h4>
+                    <button class="bg-black text-white px-6 py-2 rounded-lg text-xs font-bold">BUY</button>
+                </div>
+            </div>
+        </div>`;
     }
 </script>
 </body>
