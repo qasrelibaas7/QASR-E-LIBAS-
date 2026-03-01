@@ -142,23 +142,23 @@
     let user = null;
     let currentItem = null;
 
-    const FORMSPREE_ID = "mkovazzj"; // <--- FIXED ID
+    const FORMSPREE_ID = "mkovazzj"; 
 
-    // 1. YAHAN SE PRODUCT NAME CHANGE KAREIN
+    // 7-7 Products per category
     const productsData = {
-        "Burkha": ["Classic Nida Burkha", "Lace Luxe Abaya Style", "Stone Work Premium", "Dubai Style Burkha"],
-        "Abaya": ["A-Line Cut Abaya", "Kimono Style Luxury", "Open Front Abaya"],
-        "Hijab": ["Chiffon Soft Hijab", "Premium Jersey Hijab"],
-        "Kurta": ["Floral Print Kurta", "Casual Linen Kurta"],
-        "Prayer Mat": ["Turkish Padded Mat", "Velvet Luxury Mat"],
-        "Attar": ["Oud Al-Layl", "White Musk Premium"]
+        "Burkha": ["Classic Nida", "Lace Luxe", "Stone Work", "Dubai Style", "Butterfly Cut", "Satin Silk", "Daily Wear"],
+        "Abaya": ["A-Line Cut", "Kimono Style", "Open Front", "Zari Abaya", "Premium Velvet", "Summer Breeze", "Luxe Satin"],
+        "Hijab": ["Chiffon Soft", "Premium Jersey", "Crinkle Silk", "Satin Pearl", "Instant Hijab", "Viscose Matte", "Modal Hijab"],
+        "Kurta": ["Floral Print", "Casual Linen", "Festive Cut", "Embroidered", "Luxe Rayon", "Long Flared", "Party Wear"],
+        "Prayer Mat": ["Turkish Padded", "Velvet Mat", "Travel Mat", "Orthopedic", "Kids Mat", "Royal Thread", "Silk Mat"],
+        "Attar": ["Oud Al-Layl", "White Musk", "Dehn Oud", "Rose Special", "Arabian Night", "Sweet Amber", "Sandalwood"]
     };
 
     function initHome() {
         const grid = document.getElementById('category-grid');
         grid.innerHTML = '';
         Object.keys(productsData).forEach((cat, index) => {
-            const catImg = `images/category${index + 1}.png`; //
+            const catImg = `images/category${index + 1}.png`; 
             grid.innerHTML += `
                 <div onclick="openCat('${cat}')" class="bg-gray-50 p-2 rounded-3xl border text-center cursor-pointer">
                     <img src="${catImg}" class="h-44 w-full object-cover rounded-2xl" onerror="this.src='https://via.placeholder.com/300?text=${cat}'">
@@ -180,7 +180,7 @@
                 ? "Return Policy: Aap 7 din ke andar product exchange kar sakte hain." 
                 : "Privacy Policy: Aapka data humare paas 100% safe hai.";
         }
-        if(id === 'orders-page' && user) fetchOrders(); //
+        if(id === 'orders-page' && user) fetchOrders();
         toggleSidebar(false);
         window.scrollTo(0,0);
     }
@@ -202,15 +202,14 @@
         }
     });
 
-    // 2. YAHAN SE IMAGES AUTOMATIC ADD HONGI
+    // IMAGE FORMAT SET TO .PNG AS REQUESTED
     function openCat(name) {
         showSection('product-view');
         document.getElementById('cat-title').innerText = name;
         const list = document.getElementById('prod-list');
         list.innerHTML = '';
         productsData[name].forEach((p, i) => {
-            // Path: images/burkha1.jpg, images/abaya1.jpg etc.
-            const pImg = `images/${name.toLowerCase()}${i + 1}.jpg`; 
+            const pImg = `images/${name.toLowerCase()}${i + 1}.png`; 
             list.innerHTML += `
             <div class="bg-white p-4 rounded-3xl border shadow-sm">
                 <img src="${pImg}" class="w-full h-80 object-cover rounded-2xl" onerror="this.src='https://via.placeholder.com/400?text=${p}'">
@@ -246,12 +245,12 @@
         };
 
         try {
-            await db.collection("orders").add(data); //
+            await db.collection("orders").add(data);
             await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
-            }); //
+            });
             alert("✨ Order Received! Hum aapse jald hi WhatsApp par contact karenge.");
             showSection('orders-page');
         } catch (err) { alert("Error: " + err.message); }
@@ -262,7 +261,7 @@
         const list = document.getElementById('order-list');
         list.innerHTML = '<p class="text-center opacity-30">Loading...</p>';
         try {
-            const snap = await db.collection("orders").where("Email", "==", user.email).get(); //
+            const snap = await db.collection("orders").where("Email", "==", user.email).get();
             list.innerHTML = '';
             if(snap.empty) list.innerHTML = '<p class="text-center opacity-30">No orders found.</p>';
             snap.forEach(doc => {
