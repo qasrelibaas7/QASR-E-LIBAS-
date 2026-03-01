@@ -12,15 +12,13 @@
     <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-firestore-compat.js"></script>
     <style>
         :root { --gold: #D4AF37; }
-        body { font-family: 'Montserrat', sans-serif; background: #fff; color: #1a1a1a; margin: 0; scroll-behavior: smooth; }
+        body { font-family: 'Montserrat', sans-serif; background: #fff; color: #1a1a1a; margin: 0; }
         .hero-title { font-family: 'Playfair Display', serif; }
         .hidden { display: none !important; }
         .sidebar { transition: 0.4s; transform: translateX(-100%); z-index: 2000; position: fixed; inset: 0 0 0 0; width: 280px; background: white; border-right: 1px solid #eee; }
         .sidebar.active { transform: translateX(0); }
         .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 1500; display: none; }
         .overlay.active { display: block; }
-        .product-card { transition: 0.3s; }
-        .product-card:active { transform: scale(0.98); }
     </style>
 </head>
 <body class="pb-24">
@@ -31,21 +29,17 @@
         <h1 class="text-xl hero-title font-bold text-gold">ZYRA</h1>
     </div>
     <div id="top-auth" onclick="showSection('profile-page')">
-        <button class="text-[10px] font-bold border-b-2 border-gold uppercase tracking-widest">Login</button>
+        <button class="text-[10px] font-bold border-b-2 border-gold uppercase">Login</button>
     </div>
 </nav>
 
-<div id="sidebar" class="sidebar p-6">
-    <div class="flex justify-between items-center mb-10 border-b pb-4">
-        <h2 class="hero-title text-gold text-xl">Zyra Menu</h2>
-        <i onclick="toggleSidebar(false)" class="fas fa-times text-xl"></i>
-    </div>
+<div id="sidebar" class="sidebar p-6 shadow-2xl">
+    <h2 class="hero-title text-gold text-xl mb-10 border-b pb-4">Zyra Menu</h2>
     <div class="space-y-6 text-xs font-bold uppercase tracking-widest">
-        <p onclick="showSection('home-page')" class="cursor-pointer hover:text-gold">Home</p>
-        <p onclick="showSection('policy-page', 'Return')" class="cursor-pointer hover:text-gold">Return Policy</p>
-        <p onclick="showSection('policy-page', 'Privacy')" class="cursor-pointer hover:text-gold">Privacy Policy</p>
-        <p class="pt-10 opacity-30">Follow Us</p>
-        <div class="flex space-x-4 text-lg text-gold">
+        <p onclick="showSection('home-page')" class="cursor-pointer">Home</p>
+        <p onclick="showSection('policy-page', 'Return')" class="cursor-pointer">Return Policy</p>
+        <p onclick="showSection('policy-page', 'Privacy')" class="cursor-pointer">Privacy Policy</p>
+        <div class="pt-10 flex space-x-6 text-xl text-gold">
             <i class="fab fa-instagram"></i><i class="fab fa-whatsapp"></i>
         </div>
     </div>
@@ -53,112 +47,71 @@
 <div id="overlay" class="overlay" onclick="toggleSidebar(false)"></div>
 
 <main id="main-content">
-    <div id="home-page" class="app-section">
-        <div class="p-4">
-            <div class="h-48 bg-gray-100 rounded-3xl overflow-hidden relative shadow-inner">
-                <img src="images/hero.png" class="w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/600x400?text=Luxury+Modest+Wear'">
-                <div class="absolute inset-0 bg-black/10 flex flex-col justify-center p-6">
-                    <h2 class="text-2xl text-white hero-title">Elegance in <br>Simplicity</h2>
-                </div>
+    <div id="home-page" class="app-section p-4">
+        <div class="h-44 bg-gray-100 rounded-3xl overflow-hidden mb-6 shadow-sm">
+            <img src="images/hero.png" class="w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/800x400?text=Zyra+Luxury+Boutique'">
+        </div>
+        <div id="category-grid" class="grid grid-cols-2 gap-4">
             </div>
+        
+        <div class="mt-10 p-6 bg-gray-50 rounded-3xl border">
+            <h3 class="hero-title text-center mb-4">FAQs</h3>
+            <details class="bg-white p-3 rounded-xl border mb-2 text-xs"><summary class="font-bold">Shipping?</summary>3-5 Days delivery.</details>
+            <details class="bg-white p-3 rounded-xl border text-xs"><summary class="font-bold">Returns?</summary>7 Days easy exchange.</details>
         </div>
 
-        <div class="p-4 grid grid-cols-2 gap-4">
-            <div onclick="openCat('Burkha', 'burkha.png')" class="bg-gray-50 p-2 rounded-2xl border text-center shadow-sm">
-                <img src="images/burkha.png" class="h-44 w-full object-cover rounded-xl" onerror="this.src='https://via.placeholder.com/200x300?text=Burkha'">
-                <p class="mt-2 text-[10px] font-bold uppercase tracking-widest">Burkha</p>
-            </div>
-            <div onclick="openCat('Abaya', 'abaya.png')" class="bg-gray-50 p-2 rounded-2xl border text-center shadow-sm">
-                <img src="images/abaya.png" class="h-44 w-full object-cover rounded-xl" onerror="this.src='https://via.placeholder.com/200x300?text=Abaya'">
-                <p class="mt-2 text-[10px] font-bold uppercase tracking-widest">Abaya</p>
-            </div>
-            <div onclick="openCat('Hijab', 'hijab.png')" class="bg-gray-50 p-2 rounded-2xl border text-center shadow-sm">
-                <img src="images/hijab.png" class="h-44 w-full object-cover rounded-xl" onerror="this.src='https://via.placeholder.com/200x300?text=Hijab'">
-                <p class="mt-2 text-[10px] font-bold uppercase tracking-widest">Hijab</p>
-            </div>
-            <div onclick="openCat('Kurta', 'kurta.png')" class="bg-gray-50 p-2 rounded-2xl border text-center shadow-sm">
-                <img src="images/kurta.png" class="h-44 w-full object-cover rounded-xl" onerror="this.src='https://via.placeholder.com/200x300?text=Kurta'">
-                <p class="mt-2 text-[10px] font-bold uppercase tracking-widest">Kurta</p>
-            </div>
-            <div onclick="openCat('Prayer Mat', 'prayer.png')" class="bg-gray-50 p-2 rounded-2xl border text-center shadow-sm">
-                <img src="images/prayer.png" class="h-44 w-full object-cover rounded-xl" onerror="this.src='https://via.placeholder.com/200x300?text=Prayer+Mat'">
-                <p class="mt-2 text-[10px] font-bold uppercase tracking-widest">Prayer Mat</p>
-            </div>
-            <div onclick="openCat('Attar', 'attar.png')" class="bg-gray-50 p-2 rounded-2xl border text-center shadow-sm">
-                <img src="images/attar.png" class="h-44 w-full object-cover rounded-xl" onerror="this.src='https://via.placeholder.com/200x300?text=Attar'">
-                <p class="mt-2 text-[10px] font-bold uppercase tracking-widest">Attar</p>
-            </div>
-        </div>
-
-        <div class="p-6 bg-gray-50 mt-10">
-            <h3 class="hero-title text-xl text-center mb-6">Common Questions</h3>
-            <div class="space-y-4">
-                <details class="bg-white p-4 rounded-xl border"><summary class="text-xs font-bold cursor-pointer flex justify-between">Shipping Info? <i class="fas fa-plus text-[8px]"></i></summary><p class="text-[10px] mt-2 opacity-60">Orders are shipped within 48 hours.</p></details>
-                <details class="bg-white p-4 rounded-xl border"><summary class="text-xs font-bold cursor-pointer flex justify-between">Return/Exchange? <i class="fas fa-plus text-[8px]"></i></summary><p class="text-[10px] mt-2 opacity-60">7 Days replacement for damaged items.</p></details>
-            </div>
-        </div>
-
-        <footer class="p-10 text-center border-t mt-10 space-y-6">
-            <h2 class="hero-title text-gold text-2xl">ZYRA COLLECTIVE</h2>
-            <div class="flex justify-center space-x-8 text-xl text-gray-500">
-                <a href="#"><i class="fab fa-instagram"></i></a>
-                <a href="#"><i class="fab fa-whatsapp"></i></a>
-                <a href="#"><i class="fab fa-facebook-f"></i></a>
-            </div>
-            <div class="text-[9px] uppercase tracking-[3px] opacity-40">
-                <p>© 2026 Zyra Collective Boutique</p>
-                <p class="mt-2">Made for Modest Fashion Enthusiasts</p>
-            </div>
+        <footer class="mt-10 p-8 text-center border-t text-gray-400">
+            <p class="text-[9px] uppercase tracking-widest">© 2026 Zyra Collective</p>
         </footer>
     </div>
 
     <div id="product-view" class="app-section hidden p-5">
-        <h2 id="cat-title" class="hero-title text-2xl mb-8 uppercase tracking-widest">Collection</h2>
+        <h2 id="cat-title" class="hero-title text-2xl mb-8 uppercase">Collection</h2>
         <div id="prod-list" class="grid gap-8"></div>
     </div>
 
     <div id="checkout-page" class="app-section hidden p-6">
-        <h2 class="hero-title text-2xl mb-6">Secure Checkout</h2>
-        <div id="item-summary" class="bg-gray-50 p-6 rounded-3xl mb-6 border-dashed border-2 border-gold/30"></div>
+        <h2 class="hero-title text-2xl mb-6">Checkout</h2>
+        <div id="item-summary" class="bg-gray-50 p-6 rounded-3xl mb-6 border border-gold/20"></div>
         <form id="order-form" class="space-y-4">
-            <input type="text" id="cust-name" placeholder="Receiver's Name" class="w-full p-4 border rounded-2xl bg-gray-50" required>
-            <input type="tel" id="cust-phone" placeholder="WhatsApp Number" class="w-full p-4 border rounded-2xl bg-gray-50" required>
-            <textarea id="cust-address" placeholder="Full Delivery Address with Pincode" class="w-full p-4 border rounded-2xl bg-gray-50 h-32" required></textarea>
-            <button type="submit" id="order-btn" class="w-full py-5 bg-black text-white rounded-2xl font-bold uppercase tracking-[4px] shadow-xl">Place Order (COD)</button>
+            <input type="text" id="cust-name" placeholder="Full Name" class="w-full p-4 border rounded-2xl" required>
+            <input type="tel" id="cust-phone" placeholder="WhatsApp Number" class="w-full p-4 border rounded-2xl" required>
+            <textarea id="cust-address" placeholder="Delivery Address with Pincode" class="w-full p-4 border rounded-2xl h-32" required></textarea>
+            <button type="submit" id="order-btn" class="w-full py-5 bg-black text-white rounded-2xl font-bold uppercase tracking-widest">Confirm Order (COD)</button>
         </form>
     </div>
 
     <div id="profile-page" class="app-section hidden p-5">
-        <div class="flex items-center space-x-4 bg-gray-50 p-8 rounded-[40px] border mb-8">
-            <img id="u-img" src="" class="w-20 h-20 rounded-full border-4 border-white shadow-lg">
-            <div><h3 id="u-name" class="font-bold text-xl">Guest</h3><p class="text-[10px] text-gold uppercase font-bold tracking-widest">Gold Member</p></div>
+        <div class="flex items-center space-x-4 bg-gray-50 p-6 rounded-3xl border mb-6">
+            <img id="u-img" src="" class="w-16 h-16 rounded-full border-2 border-gold">
+            <h3 id="u-name" class="font-bold">User</h3>
         </div>
-        <div class="bg-white border rounded-[30px] divide-y overflow-hidden shadow-sm">
-            <div onclick="showSection('orders-page')" class="p-5 flex justify-between items-center cursor-pointer hover:bg-gray-50"><span>My Orders</span><i class="fas fa-chevron-right opacity-20"></i></div>
-            <div onclick="auth.signOut().then(()=>location.reload())" class="p-5 text-red-500 font-bold cursor-pointer hover:bg-gray-50">Logout Account</div>
+        <div class="bg-white border rounded-3xl divide-y overflow-hidden shadow-sm">
+            <div onclick="showSection('orders-page')" class="p-5 flex justify-between cursor-pointer"><span>My Orders</span><i class="fas fa-chevron-right opacity-20"></i></div>
+            <div onclick="auth.signOut().then(()=>location.reload())" class="p-5 text-red-500 font-bold cursor-pointer">Logout</div>
         </div>
     </div>
 
     <div id="orders-page" class="app-section hidden p-5">
-        <h2 class="hero-title text-2xl mb-6">Orders</h2>
+        <h2 class="hero-title text-2xl mb-6">My Orders</h2>
         <div id="order-list" class="space-y-4"></div>
     </div>
 
     <div id="policy-page" class="app-section hidden p-5">
         <h2 id="pol-title" class="hero-title text-2xl mb-4">Policy</h2>
-        <p id="pol-body" class="bg-gray-50 p-8 rounded-3xl text-sm leading-relaxed border"></p>
-        <button onclick="showSection('home-page')" class="w-full mt-6 py-4 bg-black text-white rounded-2xl uppercase font-bold">Back to Home</button>
+        <p id="pol-body" class="bg-gray-50 p-6 rounded-2xl text-sm border opacity-70"></p>
+        <button onclick="showSection('home-page')" class="w-full mt-6 py-4 bg-black text-white rounded-xl uppercase">Back</button>
     </div>
 </main>
 
-<div class="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t p-4 flex justify-around items-center z-[2000]">
-    <div onclick="showSection('home-page')" id="nav-home" class="text-center cursor-pointer text-gold"><i class="fas fa-th-large text-xl"></i><p class="text-[8px] mt-1 font-bold">HOME</p></div>
-    <div onclick="showSection('orders-page')" id="nav-orders" class="text-center cursor-pointer text-gray-400"><i class="fas fa-shopping-bag text-xl"></i><p class="text-[8px] mt-1 font-bold">ORDERS</p></div>
-    <div onclick="showSection('profile-page')" id="nav-profile" class="text-center cursor-pointer text-gray-400"><i class="fas fa-user-circle text-xl"></i><p class="text-[8px] mt-1 font-bold">PROFILE</p></div>
+<div class="fixed bottom-0 left-0 right-0 bg-white border-t p-4 flex justify-around items-center z-[2000] shadow-xl">
+    <div onclick="showSection('home-page')" id="nav-home" class="text-center cursor-pointer text-gold"><i class="fas fa-home text-xl"></i><p class="text-[8px] font-bold">HOME</p></div>
+    <div onclick="showSection('orders-page')" id="nav-orders" class="text-center cursor-pointer text-gray-400"><i class="fas fa-shopping-bag text-xl"></i><p class="text-[8px] font-bold">ORDERS</p></div>
+    <div onclick="showSection('profile-page')" id="nav-profile" class="text-center cursor-pointer text-gray-400"><i class="fas fa-user-circle text-xl"></i><p class="text-[8px] font-bold">PROFILE</p></div>
 </div>
 
 <script>
-    // --- FIREBASE CONFIG ---
+    // --- CONFIGS ---
     const firebaseConfig = {
         apiKey: "AIzaSyAY3G265zTP5Qpf9EoGlGy2sSrVYGI4LGk",
         authDomain: "genzfood2-96e43.firebaseapp.com",
@@ -173,8 +126,31 @@
     let user = null;
     let currentItem = null;
 
-    // --- FORMSPREE ID (Add Yours Here) ---
-    const FORMSPREE_ID = "YOUR_ID_HERE"; 
+    const FORMSPREE_ID = "YOUR_FORMSPREE_ID"; // <--- APNI ID YAHAN DAALEIN
+
+    // --- 42 PRODUCTS DATA ---
+    const productsData = {
+        "Burkha": ["Classic Black", "Dubai Style", "Lace Work", "Stone Work", "Simple Cotton", "Silk Finish", "Luxe Velvet"],
+        "Abaya": ["A-Line Cut", "Kimono Style", "Open Front", "Belted Abaya", "Premium Nida", "Butterfly Wing", "Sporty Abaya"],
+        "Hijab": ["Chiffon Silk", "Premium Jersey", "Crinkle Cotton", "Satin Luxe", "Instant Hijab", "Viscose Soft", "Modal Hijab"],
+        "Kurta": ["Floral Print", "Casual Linen", "Formal Cut", "Embroidered", "Short Kurti", "Long Flared", "Rayon Soft"],
+        "Prayer Mat": ["Padded Comfort", "Turkish Velvet", "Foldable Travel", "Kids Special", "Royal Blue", "Golden Thread", "Orthopedic"],
+        "Attar": ["Oud Al-Layl", "Rose Musk", "White Sandal", "Miskeen Special", "Arabian Night", "Sweet Jasmine", "Royal Amber"]
+    };
+
+    const prices = ["₹899", "₹1,299", "₹1,499", "₹999", "₹1,199", "₹1,599", "₹799"];
+
+    // Render Home Categories
+    function initHome() {
+        const grid = document.getElementById('category-grid');
+        Object.keys(productsData).forEach(cat => {
+            grid.innerHTML += `
+                <div onclick="openCat('${cat}')" class="bg-gray-50 p-2 rounded-2xl border text-center cursor-pointer">
+                    <img src="images/${cat.toLowerCase().replace(' ', '')}.png" class="h-40 w-full object-cover rounded-xl" onerror="this.src='https://via.placeholder.com/200x300?text=${cat}'">
+                    <p class="mt-2 text-[10px] font-bold uppercase tracking-widest">${cat}</p>
+                </div>`;
+        });
+    }
 
     function login() { auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); }
 
@@ -182,17 +158,11 @@
         if((id === 'profile-page' || id === 'orders-page' || id === 'checkout-page') && !user) { login(); return; }
         document.querySelectorAll('.app-section').forEach(s => s.classList.add('hidden'));
         document.getElementById(id).classList.remove('hidden');
-        
-        // Nav Colors
         document.querySelectorAll('.fixed.bottom-0 div').forEach(n => n.classList.replace('text-gold', 'text-gray-400'));
         if(id === 'home-page') document.getElementById('nav-home').classList.replace('text-gray-400', 'text-gold');
         if(id === 'orders-page') { document.getElementById('nav-orders').classList.replace('text-gray-400', 'text-gold'); fetchOrders(); }
         if(id === 'profile-page') document.getElementById('nav-profile').classList.replace('text-gray-400', 'text-gold');
-
-        if(id === 'policy-page') {
-            document.getElementById('pol-title').innerText = sub + " Policy";
-            document.getElementById('pol-body').innerText = sub === 'Return' ? "We offer a 7-day exchange policy. If your product is damaged or incorrect, we will replace it free of cost." : "Your data is strictly encrypted and used only for delivery purposes.";
-        }
+        if(id === 'policy-page') { document.getElementById('pol-title').innerText = sub + " Policy"; document.getElementById('pol-body').innerText = "Return within 7 days."; }
         toggleSidebar(false);
         window.scrollTo(0,0);
     }
@@ -205,104 +175,85 @@
     auth.onAuthStateChanged(u => {
         user = u;
         if(u) {
-            document.getElementById('top-auth').innerHTML = `<img src="${u.photoURL}" class="w-8 h-8 rounded-full border border-gold shadow-sm">`;
+            document.getElementById('top-auth').innerHTML = `<img src="${u.photoURL}" class="w-8 h-8 rounded-full border border-gold">`;
             document.getElementById('u-img').src = u.photoURL;
             document.getElementById('u-name').innerText = u.displayName;
         }
     });
 
-    // --- 42 PRODUCTS LOGIC ---
-    function openCat(name, img) {
+    function openCat(catName) {
         showSection('product-view');
-        document.getElementById('cat-title').innerText = name + " Collection";
+        document.getElementById('cat-title').innerText = catName;
         const list = document.getElementById('prod-list');
         list.innerHTML = '';
         
-        // 7 Products per category = 42 Total
-        for(let i=1; i<=7; i++) {
-            const prodName = `Zyra Luxe ${name} - Series 0${i}`;
-            const price = "₹1,299"; // Example Price
+        productsData[catName].forEach((name, index) => {
+            const price = prices[index];
+            // Image naming: burkha1.jpg, burkha2.jpg... attar1.jpg etc.
+            const imgPath = `images/${catName.toLowerCase().replace(' ', '')}${index + 1}.jpg`;
             list.innerHTML += `
-            <div class="product-card bg-white p-4 rounded-[30px] border shadow-sm">
-                <img src="images/${img}" class="w-full h-96 object-cover rounded-[25px]" onerror="this.src='https://via.placeholder.com/400x600?text=${name}+Vol+${i}'">
-                <div class="mt-6 flex justify-between items-end">
-                    <div>
-                        <p class="text-[10px] text-gold font-bold uppercase tracking-widest mb-1">New Arrival</p>
-                        <h4 class="font-bold text-lg">${prodName}</h4>
-                        <p class="text-xl font-bold mt-2">${price}</p>
-                    </div>
-                    <button onclick="startCheckout('${prodName}', '${price}')" class="bg-black text-white px-8 py-3 rounded-2xl text-[10px] font-bold uppercase tracking-widest">Buy</button>
+            <div class="bg-white p-4 rounded-3xl border shadow-sm">
+                <img src="${imgPath}" class="w-full h-80 object-cover rounded-2xl" onerror="this.src='https://via.placeholder.com/300x400?text=${catName}+${index+1}'">
+                <div class="mt-4 flex justify-between items-center">
+                    <div><h4 class="font-bold text-sm">${name}</h4><p class="text-gold font-bold">${price}</p></div>
+                    <button onclick="startCheckout('${name}', '${price}')" class="bg-black text-white px-6 py-2 rounded-xl text-xs font-bold uppercase">Buy</button>
                 </div>
             </div>`;
-        }
+        });
     }
 
     function startCheckout(name, price) {
         currentItem = { name, price };
         showSection('checkout-page');
-        document.getElementById('item-summary').innerHTML = `
-            <p class="text-[10px] opacity-40 uppercase tracking-widest mb-2">Order Summary</p>
-            <h4 class="text-lg">${name}</h4>
-            <p class="text-gold font-bold text-xl">${price}</p>
-        `;
+        document.getElementById('item-summary').innerHTML = `<h4 class="font-bold">${name}</h4><p class="text-gold font-bold text-xl">${price}</p>`;
     }
 
-    // --- FORMSPREE + FIREBASE ORDERING ---
     document.getElementById('order-form').addEventListener('submit', async (e) => {
         e.preventDefault();
         const btn = document.getElementById('order-btn');
-        btn.innerText = "Processing...";
+        btn.innerText = "Placing Order...";
         btn.disabled = true;
 
-        const orderData = {
-            Client: document.getElementById('cust-name').value,
+        const data = {
+            Name: document.getElementById('cust-name').value,
             Email: user.email,
             WhatsApp: document.getElementById('cust-phone').value,
             Address: document.getElementById('cust-address').value,
-            Product: currentItem.name,
-            Price: currentItem.price,
-            Date: new Date().toLocaleString()
+            Item: currentItem.name,
+            Price: currentItem.price
         };
 
         try {
-            // 1. Firebase (DB Backup)
-            await db.collection("orders").add({...orderData, Status: "Confirmed"});
-
-            // 2. Formspree (Direct Email)
+            await db.collection("orders").add({...data, Status: "Confirmed", Date: new Date().toLocaleString()});
             await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(orderData)
+                body: JSON.stringify(data)
             });
-
-            alert("🎉 Order Placed Successfully! Email Sent.");
+            alert("Order Success!");
             showSection('orders-page');
-        } catch (err) {
-            alert("Error: " + err.message);
-        } finally {
-            btn.innerText = "Confirm Order (COD)";
-            btn.disabled = false;
-        }
+        } catch (err) { alert("Error: " + err.message); }
+        btn.innerText = "Confirm Order (COD)";
+        btn.disabled = false;
     });
 
     async function fetchOrders() {
         const list = document.getElementById('order-list');
-        list.innerHTML = '<p class="text-center py-10 opacity-30">Loading orders...</p>';
-        const snap = await db.collection("orders").where("Client", "==", user.displayName).get();
-        if(snap.empty) { list.innerHTML = '<p class="text-center py-20 opacity-20">No orders found.</p>'; return; }
+        list.innerHTML = '<p class="text-center py-10 opacity-30 text-xs">Loading...</p>';
+        const snap = await db.collection("orders").where("Email", "==", user.email).get();
+        if(snap.empty) { list.innerHTML = '<p class="text-center py-20 opacity-20 text-xs">No orders.</p>'; return; }
         list.innerHTML = '';
         snap.forEach(doc => {
             const d = doc.data();
-            list.innerHTML += `<div class="p-5 bg-gray-50 border rounded-3xl">
-                <div class="flex justify-between items-start mb-2">
-                    <p class="text-[9px] text-gold font-bold uppercase tracking-[2px]">Status: ${d.Status}</p>
-                    <p class="text-[9px] opacity-40">${d.Date.split(',')[0]}</p>
-                </div>
-                <h4 class="font-bold text-sm">${d.Product}</h4>
-                <p class="text-gold font-bold text-sm mt-1">${d.Price}</p>
+            list.innerHTML += `<div class="p-4 bg-gray-50 border rounded-2xl">
+                <p class="text-[9px] text-gold font-bold">CONFIRMED</p>
+                <h4 class="font-bold text-sm">${d.Item}</h4>
+                <p class="text-gold font-bold text-sm">${d.Price}</p>
             </div>`;
         });
     }
+
+    initHome();
 </script>
 </body>
 </html>
