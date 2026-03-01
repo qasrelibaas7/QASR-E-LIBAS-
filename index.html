@@ -47,19 +47,20 @@
 <div id="overlay" class="overlay" onclick="toggleSidebar(false)"></div>
 
 <main id="main-content">
-    <div class="relative h-56 bg-gray-100 rounded-[40px] overflow-hidden mb-8 shadow-lg">
-    <div id="slider-container" class="flex transition-transform duration-700 ease-in-out h-full" style="width: 300%;">
-        <img src="images/hero1.png" class="w-1/3 h-full object-cover" onerror="this.src='https://via.placeholder.com/800x400?text=New+Arrivals'">
-        <img src="images/hero2.png" class="w-1/3 h-full object-cover" onerror="this.src='https://via.placeholder.com/800x400?text=Luxury+Collection'">
-        <img src="images/hero3.png" class="w-1/3 h-full object-cover" onerror="this.src='https://via.placeholder.com/800x400?text=Eid+Special'">
-    </div>
-    <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2">
-        <div class="w-2 h-2 rounded-full bg-white opacity-100 slider-dot transition-all duration-300" style="width: 20px;"></div>
-        <div class="w-2 h-2 rounded-full bg-white opacity-50 slider-dot transition-all duration-300"></div>
-        <div class="w-2 h-2 rounded-full bg-white opacity-50 slider-dot transition-all duration-300"></div>
-    </div>
-    </div>
-    
+    <div id="home-page" class="app-section p-4">
+        <div class="relative h-56 bg-gray-100 rounded-[40px] overflow-hidden mb-8 shadow-lg">
+            <div id="slider-container" class="flex transition-transform duration-700 ease-in-out h-full" style="width: 300%;">
+                <img src="images/hero1.png" class="w-1/3 h-full object-cover" onerror="this.src='https://via.placeholder.com/800x400?text=New+Arrivals'">
+                <img src="images/hero2.png" class="w-1/3 h-full object-cover" onerror="this.src='https://via.placeholder.com/800x400?text=Luxury+Collection'">
+                <img src="images/hero3.png" class="w-1/3 h-full object-cover" onerror="this.src='https://via.placeholder.com/800x400?text=Eid+Special'">
+            </div>
+            <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2">
+                <div class="w-5 h-2 rounded-full bg-white slider-dot transition-all duration-300"></div>
+                <div class="w-2 h-2 rounded-full bg-white opacity-50 slider-dot transition-all duration-300"></div>
+                <div class="w-2 h-2 rounded-full bg-white opacity-50 slider-dot transition-all duration-300"></div>
+            </div>
+        </div>
+
         <div id="category-grid" class="grid grid-cols-2 gap-4"></div>
 
         <footer class="mt-16 p-10 bg-white border-t text-center space-y-6">
@@ -153,7 +154,6 @@
 
     const FORMSPREE_ID = "mkovazzj"; 
 
-    // 7-7 Products per category
     const productsData = {
         "Burkha": ["Classic Nida", "Lace Luxe", "Stone Work", "Dubai Style", "Butterfly Cut", "Satin Silk", "Daily Wear"],
         "Abaya": ["A-Line Cut", "Kimono Style", "Open Front", "Zari Abaya", "Premium Velvet", "Summer Breeze", "Luxe Satin"],
@@ -211,7 +211,6 @@
         }
     });
 
-    // IMAGE FORMAT SET TO .PNG AS REQUESTED
     function openCat(name) {
         showSection('product-view');
         document.getElementById('cat-title').innerText = name;
@@ -281,36 +280,32 @@
                     <p class="text-[8px] opacity-50">${d.Date}</p>
                 </div>`;
             });
-                } catch(e) { list.innerHTML = "Error loading orders."; }
+        } catch(e) { list.innerHTML = "Error loading orders."; }
     }
 
-    // --- SLIDER LOGIC START (Yahan se copy karein) ---
+    // SLIDER LOGIC
     let currentSlide = 0;
     function nextSlide() {
         const slider = document.getElementById('slider-container');
         const dots = document.querySelectorAll('.slider-dot');
-        if(!slider) return;
+        if(!slider || slider.offsetParent === null) return; 
 
         currentSlide = (currentSlide + 1) % 3;
-        // Slider ko move karne ke liye
         slider.style.transform = `translateX(-${(currentSlide * 100) / 3}%)`;
         
-        // Dots ko update karne ke liye
         dots.forEach((dot, i) => {
             dot.style.opacity = i === currentSlide ? "1" : "0.5";
             dot.style.width = i === currentSlide ? "20px" : "8px";
         });
     }
-    // Har 3 second mein nextSlide function chalega
     setInterval(nextSlide, 3000); 
-    // --- SLIDER LOGIC END ---
 
     initHome();
 </script>
-    
-    <a href="https://wa.me/917385009275" class="fixed bottom-24 right-6 bg-[#25D366] text-white w-14 h-14 rounded-full flex items-center justify-center shadow-2xl z-[3000] animate-bounce" target="_blank">
+
+<a href="https://wa.me/917385009275" class="fixed bottom-24 right-6 bg-[#25D366] text-white w-14 h-14 rounded-full flex items-center justify-center shadow-2xl z-[3000] animate-bounce" target="_blank">
     <i class="fab fa-whatsapp text-3xl"></i>
-    </a>
-    
+</a>
+
 </body>
 </html>
