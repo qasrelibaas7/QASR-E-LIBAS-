@@ -16,9 +16,9 @@
 
     <style>
         :root { --gold: #D4AF37; --dark: #1a1a1a; --yellow: #FFD700; }
-        body { font-family: 'Montserrat', sans-serif; background: #fdfaf5; margin: 0; padding-bottom: 100px; }
+        body { font-family: 'Montserrat', sans-serif; background: #fdfaf5; margin: 0; padding-bottom: 100px; overflow-x: hidden; }
         .hero-title { font-family: 'Playfair Display', serif; }
-        #sidebar { transition: 0.4s; transform: translateX(-100%); z-index: 1000; }
+        #sidebar { transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); transform: translateX(-100%); z-index: 1000; }
         #sidebar.active { transform: translateX(0); }
         #overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 900; }
         #overlay.active { display: block; }
@@ -29,14 +29,14 @@
 <body>
 
 <div id="sidebar" class="fixed inset-y-0 left-0 w-72 bg-white shadow-2xl p-6">
-    <div class="flex justify-between items-center mb-10">
+    <div class="flex justify-between items-center mb-10 border-b pb-4">
         <h2 class="hero-title text-2xl text-gold">Zyra Menu</h2>
         <i onclick="toggleMenu()" class="fas fa-times text-xl cursor-pointer"></i>
     </div>
     <ul class="space-y-6 font-bold uppercase text-xs tracking-widest">
         <li onclick="location.reload()" class="cursor-pointer">Home</li>
-        <li onclick="alert('Privacy: Your data is 100% safe.')" class="cursor-pointer">Privacy Policy</li>
-        <li onclick="alert('Return: 7 days exchange policy.')" class="cursor-pointer">Return Policy</li>
+        <li onclick="alert('Privacy Policy: We keep your data private.')" class="cursor-pointer">Privacy Policy</li>
+        <li onclick="alert('Return Policy: 7-day hassle-free exchange.')" class="cursor-pointer">Return Policy</li>
     </ul>
 </div>
 <div id="overlay" onclick="toggleMenu()"></div>
@@ -51,9 +51,9 @@
     </div>
 </nav>
 
-<section id="hero-main" class="h-64 bg-gray-200 relative">
-    <img src="images/hero.png" class="w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/800x400?text=Zyra+Boutique'">
-    <div class="absolute inset-0 bg-black/20 flex flex-col items-center justify-center text-white">
+<section id="hero-main" class="h-64 bg-gray-200 relative overflow-hidden">
+    <img src="images/hero.png" class="w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/800x400?text=Luxury+Collection'">
+    <div class="absolute inset-0 bg-black/30 flex flex-col items-center justify-center text-white p-4">
         <h2 class="text-3xl hero-title">Modest Luxury</h2>
         <p class="text-[10px] uppercase tracking-[3px] mt-2 italic">...enhancing your appearance</p>
     </div>
@@ -87,7 +87,7 @@
 </div>
 
 <div id="product-view" class="hidden-section p-5">
-    <button onclick="goBack()" class="mb-6 font-bold text-xs uppercase text-gray-400"><i class="fas fa-arrow-left mr-2"></i>Back to Collection</button>
+    <button onclick="goBack()" class="mb-6 font-bold text-xs uppercase text-gray-400">← Back to Collection</button>
     <div id="product-list" class="space-y-6"></div>
 </div>
 
@@ -96,35 +96,34 @@
         <h2 class="hero-title text-2xl">Checkout</h2>
         <i onclick="closeCheckout()" class="fas fa-times text-xl cursor-pointer"></i>
     </div>
-    <div id="checkout-summary" class="mb-6 p-4 bg-gray-50 rounded-lg italic text-sm border-l-4 border-gold"></div>
     <div class="space-y-4">
         <input type="text" id="cust-name" placeholder="Full Name" class="w-full border p-4 rounded-xl outline-none focus:border-gold">
         <input type="tel" id="cust-phone" placeholder="WhatsApp Number" class="w-full border p-4 rounded-xl outline-none focus:border-gold">
         <textarea id="cust-address" placeholder="Full Address with Pincode" class="w-full border p-4 rounded-xl h-24 outline-none focus:border-gold"></textarea>
         <select id="pay-method" onchange="toggleQR()" class="w-full border p-4 rounded-xl font-bold bg-white">
             <option value="COD">Cash on Delivery</option>
-            <option value="UPI">Pay Online (15% OFF)</option>
+            <option value="UPI">Pay Online (15% Instant Discount)</option>
         </select>
-        <div id="qr-display" class="hidden-section text-center p-4 border-2 border-dashed border-gold rounded-xl bg-yellow-50/30">
-            <img src="images/paymentqr.png" class="w-48 mx-auto shadow-md" onerror="this.src='https://via.placeholder.com/200?text=Scan+to+Pay'">
-            <p class="text-[10px] text-red-500 mt-2 font-bold italic text-center">Payment ke baad hi 'PLACE ORDER' karein</p>
+        <div id="qr-display" class="hidden-section text-center p-4 border-2 border-dashed border-gold rounded-xl bg-yellow-50/20">
+            <img src="images/paymentqr.png" class="w-48 mx-auto" onerror="this.src='https://via.placeholder.com/200?text=Scan+QR'">
+            <p class="text-[10px] text-red-600 mt-2 font-bold italic">Pay first, then click "Place Order"</p>
         </div>
-        <button onclick="submitOrderProcess()" id="order-btn" class="w-full bg-black text-white py-5 rounded-xl font-bold tracking-widest uppercase">PLACE ORDER NOW</button>
+        <button onclick="submitOrderProcess()" id="order-btn" class="w-full bg-black text-white py-5 rounded-xl font-bold uppercase tracking-widest">Place Order</button>
     </div>
 </div>
 
 <footer class="p-8 border-t bg-white mt-10">
-    <div class="max-w-md mx-auto">
-        <h3 class="hero-title text-lg text-gold mb-6 text-center">Help & Support</h3>
-        <div class="space-y-4 mb-10">
-            <details class="border-b pb-2"><summary class="font-bold text-xs cursor-pointer flex justify-between">Delivery Time <i class="fas fa-plus text-[8px]"></i></summary><p class="text-[10px] py-2 text-gray-500">Standard delivery takes 3-5 working days India-wide.</p></details>
-            <details class="border-b pb-2"><summary class="font-bold text-xs cursor-pointer flex justify-between">Refund Policy <i class="fas fa-plus text-[8px]"></i></summary><p class="text-[10px] py-2 text-gray-500">We offer exchange within 7 days for defective items.</p></details>
+    <div class="max-w-md mx-auto space-y-6 text-center">
+        <h3 class="hero-title text-lg text-gold mb-6">Customer Support</h3>
+        <div class="text-left space-y-4 mb-10">
+            <details class="border-b pb-2"><summary class="font-bold text-xs cursor-pointer">Delivery Time?</summary><p class="text-[10px] py-2 text-gray-500">Usually 3 to 5 working days.</p></details>
+            <details class="border-b pb-2"><summary class="font-bold text-xs cursor-pointer">Quality Guarantee?</summary><p class="text-[10px] py-2 text-gray-500">Premium quality fabric and authentic products only.</p></details>
         </div>
-        <div class="flex justify-center space-x-10 mb-8">
-            <a href="https://instagram.com/um3rx70" class="text-gray-400 hover:text-pink-500"><i class="fab fa-instagram text-2xl"></i></a>
+        <div class="flex justify-center space-x-10 mb-6">
+            <a href="https://instagram.com/um3rx70" class="text-gray-400 hover:text-pink-600"><i class="fab fa-instagram text-2xl"></i></a>
             <a href="https://wa.me/7385009275" class="text-gray-400 hover:text-green-500"><i class="fab fa-whatsapp text-2xl"></i></a>
         </div>
-        <p class="text-[9px] text-center uppercase tracking-widest text-gray-300">© 2026 Zyra Collective Boutique</p>
+        <p class="text-[9px] uppercase tracking-widest text-gray-300">© 2026 Zyra Collective Boutique</p>
     </div>
 </footer>
 
@@ -133,11 +132,11 @@
         <i class="fas fa-home text-lg nav-active"></i>
         <span class="block text-[8px] uppercase mt-1 nav-active font-bold">Home</span>
     </div>
-    <div onclick="alert('Updating order history...')" class="text-center cursor-pointer opacity-40">
+    <div onclick="alert('Updating history...')" class="text-center cursor-pointer opacity-30">
         <i class="fas fa-shopping-bag text-white text-lg"></i>
         <span class="block text-[8px] uppercase mt-1 text-white">Orders</span>
     </div>
-    <div onclick="location.reload()" class="text-center cursor-pointer opacity-40">
+    <div onclick="location.reload()" class="text-center cursor-pointer opacity-30">
         <i class="fas fa-sync-alt text-white text-lg"></i>
         <span class="block text-[8px] uppercase mt-1 text-white">Refresh</span>
     </div>
@@ -160,13 +159,13 @@
 
     let currentUser = null;
     let selectedItemName = "";
-    let currentPrice = 0;
+    let basePrice = 0;
 
-    // Persistent Login Logic
+    // Login Persistence Fix
     auth.onAuthStateChanged((user) => {
         if (user) {
             currentUser = user;
-            document.getElementById('auth-ui').innerHTML = `<img src="${user.photoURL}" class="w-8 h-8 rounded-full border-2 border-gold" onclick="alert('Welcome, ${user.displayName}')">`;
+            document.getElementById('auth-ui').innerHTML = `<img src="${user.photoURL}" class="w-8 h-8 rounded-full border-2 border-gold" onclick="alert('Logged in as ${user.displayName}')">`;
         } else {
             document.getElementById('auth-ui').innerHTML = `<button onclick="handleLogin()" class="text-[10px] font-bold border-b-2 border-gold uppercase pb-1">Login</button>`;
         }
@@ -174,7 +173,7 @@
 
     function handleLogin() {
         const provider = new firebase.auth.GoogleAuthProvider();
-        auth.signInWithPopup(provider);
+        auth.signInWithPopup(provider).catch(e => console.log("Login Cancelled"));
     }
 
     function toggleMenu() {
@@ -187,26 +186,21 @@
         document.getElementById('category-view').classList.add('hidden-section');
         document.getElementById('hero-main').classList.add('hidden-section');
         document.getElementById('product-view').classList.remove('hidden-section');
+        
         let list = document.getElementById('product-list');
         list.innerHTML = '';
         
-        let price = 999;
-        if(cat === 'Attar') price = 299;
-        if(cat === 'Hijab') price = 399;
-        if(cat === 'Prayer Mat') price = 749;
-        
+        let price = (cat === 'Attar') ? 299 : (cat === 'Hijab' ? 399 : 899);
         let prefix = cat.toLowerCase().replace(/\s+/g, '');
+
         for(let i=1; i<=7; i++) {
-            let itemName = `Zyra ${cat} Luxury - Edition ${i}`;
+            let name = `Zyra Premium ${cat} - Vol ${i}`;
             list.innerHTML += `
                 <div class="bg-white p-4 rounded-2xl shadow-sm border">
-                    <img src="images/${prefix}${i}.png" class="w-full h-80 object-cover rounded-xl" onerror="this.src='https://via.placeholder.com/300x400?text=Boutique+Item'">
+                    <img src="images/${prefix}${i}.png" class="w-full h-80 object-cover rounded-xl" onerror="this.src='https://via.placeholder.com/300x400?text=Product+Photo'">
                     <div class="mt-4 flex justify-between items-center">
-                        <div>
-                            <h4 class="font-bold text-sm text-gray-800">${itemName}</h4>
-                            <p class="text-gold font-bold">₹${price}</p>
-                        </div>
-                        <button onclick="startCheckout('${itemName}', ${price})" class="bg-black text-white px-5 py-2.5 rounded-lg text-[10px] font-bold">BUY NOW</button>
+                        <div><h4 class="font-bold text-sm">${name}</h4><p class="text-gold font-bold">₹${price}</p></div>
+                        <button onclick="startCheckout('${name}', ${price})" class="bg-black text-white px-5 py-2.5 rounded-lg text-[10px] font-bold">BUY NOW</button>
                     </div>
                 </div>`;
         }
@@ -221,8 +215,7 @@
     function startCheckout(name, price) {
         if(!currentUser) { handleLogin(); return; }
         selectedItemName = name;
-        currentPrice = price;
-        document.getElementById('checkout-summary').innerText = `Item: ${name} | Base Price: ₹${price}`;
+        basePrice = price;
         document.getElementById('checkout-page').classList.remove('hidden-section');
     }
 
@@ -230,40 +223,34 @@
     function toggleQR() { document.getElementById('qr-display').classList.toggle('hidden-section', document.getElementById('pay-method').value !== 'UPI'); }
 
     function submitOrderProcess() {
-        const name = document.getElementById('cust-name').value;
-        const phone = document.getElementById('cust-phone').value;
-        const addr = document.getElementById('cust-address').value;
+        const name = document.getElementById('cust-name').value.trim();
+        const phone = document.getElementById('cust-phone').value.trim();
+        const addr = document.getElementById('cust-address').value.trim();
         const payment = document.getElementById('pay-method').value;
 
         if(!name || !phone || !addr) { alert("Please fill all details!"); return; }
         
-        const finalAmount = payment === 'UPI' ? Math.floor(currentPrice * 0.85) : currentPrice;
+        const finalPrice = payment === 'UPI' ? Math.floor(basePrice * 0.85) : basePrice;
         const btn = document.getElementById('order-btn');
-        btn.disabled = true; btn.innerText = "Processing Order...";
+        btn.disabled = true; btn.innerText = "Processing...";
 
-        // Firebase Save
-        db.collection("orders").add({
-            customer_name: name,
-            product_name: selectedItemName,
-            phone_number: phone,
-            address: addr,
-            amount: finalAmount,
-            method: payment,
-            timestamp: new Date()
-        }).then(() => {
-            // EmailJS Send - Fixed Variables
-            emailjs.send("service_pmsvfom", "template_vq0n6xs", {
-                customer_name: name,
-                product_name: selectedItemName,
-                phone_number: phone,
-                address: addr,
-                payment_type: payment,
-                final_price: "₹" + finalAmount
-            }).then(() => {
-                alert("Order Successful! 🎉 Check your email.");
+        // MATCHING YOUR DASHBOARD VARIABLES EXACTLY
+        const templateData = {
+            customer: name,       // Matches {{customer}}
+            item: selectedItemName, // Matches {{item}}
+            phone: phone,         // Matches {{phone}}
+            address: addr,        // Matches {{address}}
+            pay: payment,         // Matches {{pay}}
+            price: "₹" + finalPrice // Matches {{price}}
+        };
+
+        db.collection("orders").add({...templateData, time: new Date()}).then(() => {
+            emailjs.send("service_pmsvfom", "template_vq0n6xs", templateData)
+            .then(() => {
+                alert("Order Successful! Check your email. 🎉");
                 location.reload();
             });
-        }).catch(err => { alert("Error: " + err.message); btn.disabled = false; });
+        }).catch(e => { alert("Submission failed!"); btn.disabled = false; });
     }
 </script>
 </body>
