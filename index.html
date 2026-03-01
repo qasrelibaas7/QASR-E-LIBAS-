@@ -3,197 +3,344 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QASR-E-LIBAS | Official Store</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <title>Zyra Collective | Luxury Islamic Boutique</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-firestore-compat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
     <style>
-        [x-cloak] { display: none !important; }
-        .gold-text { color: #D4AF37; }
-        .gold-bg { background: linear-gradient(135deg, #D4AF37 0%, #B8860B 100%); }
-        .modal-blur { backdrop-filter: blur(20px); background: rgba(0,0,0,0.85); }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .announcement-bar { background: #4285f4; color: white; padding: 8px; text-align: center; font-size: 13px; font-weight: 500; overflow: hidden; }
-        .marquee { display: inline-block; animation: marquee 15s linear infinite; }
-        @keyframes marquee { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
-        .product-card { transition: 0.3s; }
-        .product-card img { transition: transform 0.5s ease; }
-        .product-card:hover img { transform: scale(1.1); }
-        .progress-line { height: 4px; width: 100%; background: #333; border-radius: 10px; overflow: hidden; margin-bottom: 20px; display: none; }
-        .progress-bar { height: 100%; width: 50%; background: #D4AF37; animation: loading 1.5s infinite linear; }
-        @keyframes loading { from { transform: translateX(-100%); } to { transform: translateX(200%); } }
+        :root { --gold: #D4AF37; --dark: #1a1a1a; --yellow-active: #FFD700; }
+        body { font-family: 'Montserrat', sans-serif; background: #fdfaf5; color: var(--dark); margin: 0; padding-bottom: 90px; overflow-x: hidden; }
+        .hero-title { font-family: 'Playfair Display', serif; }
+        
+        /* Sidebar Menu Logic */
+        #sidebar { transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); transform: translateX(-100%); z-index: 200; }
+        #sidebar.active { transform: translateX(0); }
+        #overlay { display: none; transition: 0.3s; z-index: 150; }
+        #overlay.active { display: block; }
+
+        .hidden-section { display: none !important; }
+        
+        /* Sliding Header Animation */
+        .sliding-header { background: #000; color: #fff; padding: 10px 0; overflow: hidden; white-space: nowrap; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; }
+        .sliding-text { display: inline-block; animation: slide 20s linear infinite; }
+        @keyframes slide { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
+
+        /* Bottom Nav Active State */
+        .nav-item-active { color: var(--yellow-active) !important; }
+
+        /* FAQ Styling */
+        details summary::-webkit-details-marker { display: none; }
+        details[open] summary i { transform: rotate(180deg); }
     </style>
 </head>
-<body class="bg-black text-white" x-data="qasrApp()" x-init="initApp()">
+<body>
 
-    <div class="announcement-bar">
-        <div class="marquee">✨ Special Offer: Free Delivery on all orders above ₹1999! | Premium Arabic Collection is Live! ✨</div>
+<div id="sidebar" class="fixed inset-y-0 left-0 w-72 bg-white shadow-2xl p-6">
+    <div class="flex justify-between items-center mb-10">
+        <h2 class="hero-title text-2xl text-gold">Zyra Menu</h2>
+        <i onclick="toggleMenu()" class="fas fa-times text-2xl cursor-pointer p-2"></i>
     </div>
+    <ul class="space-y-6 text-sm font-bold uppercase tracking-widest">
+        <li onclick="location.reload()" class="cursor-pointer hover:text-gold transition">Home</li>
+        <li onclick="openPolicy('privacy')" class="cursor-pointer hover:text-gold transition">Privacy Policy</li>
+        <li onclick="openPolicy('return')" class="cursor-pointer hover:text-gold transition">Return Policy</li>
+        <li onclick="toggleMenu()" class="cursor-pointer hover:text-gold transition">Contact Us</li>
+    </ul>
+    <div class="absolute bottom-10 left-6 text-[10px] text-gray-400">© 2026 ZYRA COLLECTIVE</div>
+</div>
+<div id="overlay" onclick="toggleMenu()" class="fixed inset-0 bg-black/60"></div>
 
-    <header class="sticky top-0 z-50 bg-black/95 border-b border-gold-900/20 py-4">
-        <div class="container mx-auto px-4 flex justify-between items-center">
-            <div class="flex items-center space-x-3 cursor-pointer" @click="page = 'home'">
-                <img src="assets/logo.png" @error="$el.src='https://via.placeholder.com/40?text=QL'" class="w-10 h-10 rounded border border-gold-600/30">
-                <h1 class="text-xl font-serif font-bold gold-text tracking-widest uppercase">Qasr-E-Libas</h1>
-            </div>
-            <div class="flex items-center space-x-6">
-                <button @click="page = 'home'" :class="page === 'home' ? 'gold-text' : 'text-gray-500'"><i class="fa-solid fa-house-chimney text-xl"></i></button>
-                <button @click="openProfile()" :class="page === 'profile' ? 'gold-text' : 'text-gray-500'"><i class="fa-solid fa-circle-user text-xl"></i></button>
-            </div>
+<div class="sliding-header">
+    <div class="sliding-text">
+        COD AVAILABLE ✅ 15% OFF ON YOUR FIRST ORDER. USE CODE: <span class="text-yellow-400">ZYRA15</span> — PREMIUM ISLAMIC WEAR COLLECTION — FAST SHIPPING INDIA-WIDE
+    </div>
+</div>
+
+<nav class="bg-white p-5 flex justify-between items-center sticky top-0 z-50 shadow-sm border-b border-gray-100">
+    <div class="flex items-center space-x-4">
+        <i onclick="toggleMenu()" class="fas fa-bars text-xl cursor-pointer hover:text-gold"></i>
+        <h1 class="text-xl hero-title tracking-tight font-bold">ZYRA COLLECTIVE</h1>
+    </div>
+    <div id="auth-ui">
+        <button onclick="handleLogin()" class="text-[10px] font-bold border-b-2 border-gold uppercase pb-1 tracking-widest">Login</button>
+    </div>
+</nav>
+
+<section id="hero-main" class="h-64 bg-gray-100 relative overflow-hidden">
+    <img src="images/hero.png" class="w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/800x400?text=Zyra+Collection'">
+    <div class="absolute inset-0 bg-black/30 flex flex-col items-center justify-center text-white text-center p-4">
+        <h2 class="text-3xl hero-title">Modest Luxury.</h2>
+        <p class="text-[10px] uppercase tracking-[3px] mt-2 opacity-80 italic">Curated with Faith</p>
+    </div>
+</section>
+
+<div id="category-view" class="p-5">
+    <div class="flex justify-between items-end mb-6">
+        <h3 class="hero-title text-xl border-l-4 border-gold pl-3">Categories</h3>
+    </div>
+    <div class="grid grid-cols-2 gap-4">
+        <div onclick="openCategory('Burkha')" class="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
+            <img src="images/category1.png" class="h-40 w-full object-cover" onerror="this.src='https://via.placeholder.com/300x400?text=Burkha'">
+            <p class="p-3 text-center text-[10px] font-bold uppercase tracking-widest bg-white">Burkha</p>
         </div>
-    </header>
+        <div onclick="openCategory('Kurta')" class="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
+            <img src="images/category2.png" class="h-40 w-full object-cover" onerror="this.src='https://via.placeholder.com/300x400?text=Kurta'">
+            <p class="p-3 text-center text-[10px] font-bold uppercase tracking-widest bg-white">Kurta</p>
+        </div>
+        <div onclick="openCategory('Hijab')" class="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
+            <img src="images/category3.png" class="h-40 w-full object-cover" onerror="this.src='https://via.placeholder.com/300x400?text=Hijab'">
+            <p class="p-3 text-center text-[10px] font-bold uppercase tracking-widest bg-white">Hijab</p>
+        </div>
+        <div onclick="openCategory('Abaya')" class="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
+            <img src="images/category4.png" class="h-40 w-full object-cover" onerror="this.src='https://via.placeholder.com/300x400?text=Abaya'">
+            <p class="p-3 text-center text-[10px] font-bold uppercase tracking-widest bg-white">Abaya</p>
+        </div>
+        <div onclick="openCategory('Prayer Mat')" class="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
+            <img src="images/category5.png" class="h-40 w-full object-cover" onerror="this.src='https://via.placeholder.com/300x400?text=Prayer+Mat'">
+            <p class="p-3 text-center text-[10px] font-bold uppercase tracking-widest bg-white">Prayer Mat</p>
+        </div>
+        <div onclick="openCategory('Attar')" class="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
+            <img src="images/category6.png" class="h-40 w-full object-cover" onerror="this.src='https://via.placeholder.com/300x400?text=Attar'">
+            <p class="p-3 text-center text-[10px] font-bold uppercase tracking-widest bg-white">Attar</p>
+        </div>
+    </div>
+</div>
 
-    <main x-show="page === 'home'" class="container mx-auto px-4 py-8 space-y-12">
-        <template x-for="cat in sections" :key="cat">
-            <div>
-                <h2 class="text-2xl font-serif gold-text mb-6 border-l-4 border-gold-600 pl-3 uppercase tracking-tighter" x-text="cat"></h2>
-                <div class="flex space-x-4 overflow-x-auto pb-4 no-scrollbar snap-x">
-                    <template x-for="i in 10" :key="i">
-                        <div @click="handleProductSelection(cat, i)" class="product-card snap-start min-w-[200px] md:min-w-[250px] bg-[#0d0d0d] border border-gray-900 rounded-2xl overflow-hidden cursor-pointer hover:border-gold-600 transition">
-                            <img :src="`assets/${cat.toLowerCase().replace(' ', '_')}_${i}.jpg`" 
-                                 @error="$el.src='https://via.placeholder.com/400x600?text=Premium+Collection'"
-                                 class="h-72 w-full object-cover">
-                            <div class="p-4">
-                                <h3 class="font-bold text-gray-200" x-text="`Premium ${cat} #${i}`"></h3>
-                                <p class="gold-text font-bold mt-2">₹1,250</p>
-                            </div>
-                        </div>
-                    </template>
+<div id="product-view" class="hidden-section p-5">
+    <button onclick="goBack()" class="mb-6 text-xs font-bold flex items-center gap-2 text-gray-400 hover:text-gold">
+        <i class="fas fa-chevron-left"></i> BACK TO COLLECTION
+    </button>
+    <div id="product-list" class="space-y-8"></div>
+</div>
+
+<div id="checkout-page" class="hidden-section fixed inset-0 bg-white z-[300] p-6 overflow-y-auto">
+    <div class="flex justify-between items-center border-b pb-4 mb-8">
+        <h2 class="hero-title text-2xl">Checkout</h2>
+        <i onclick="closeCheckout()" class="fas fa-times text-xl cursor-pointer"></i>
+    </div>
+    
+    <div id="order-summary-box" class="bg-gray-50 p-4 rounded-lg mb-8 italic text-sm border-l-4 border-gold"></div>
+
+    <div class="space-y-5">
+        <input type="text" id="cust-name" placeholder="Full Name" class="w-full border p-4 rounded-xl text-sm outline-none focus:border-gold">
+        <input type="tel" id="cust-phone" placeholder="WhatsApp Number (10 Digits)" class="w-full border p-4 rounded-xl text-sm outline-none focus:border-gold">
+        <textarea id="cust-address" placeholder="House No, Street, Landmark, Pincode" class="w-full border p-4 rounded-xl text-sm h-32 outline-none focus:border-gold"></textarea>
+        
+        <select id="pay-method" onchange="toggleQR()" class="w-full border p-4 rounded-xl text-sm font-bold bg-white">
+            <option value="COD">Cash on Delivery (₹499)</option>
+            <option value="UPI">Pay Online (₹424 - 15% OFF)</option>
+        </select>
+
+        <div id="qr-display" class="hidden-section text-center p-6 border-2 border-dashed border-gold rounded-2xl bg-yellow-50/30">
+            <p class="text-[10px] uppercase font-bold text-gray-500 mb-4">Scan to pay securely</p>
+            <img src="images/paymentqr.png" class="w-48 mx-auto rounded shadow-lg border-2 border-white" onerror="this.src='https://via.placeholder.com/200?text=QR+Missing'">
+            <p class="text-xs text-red-500 mt-4 italic font-semibold">Payment ke baad 'PLACE ORDER' click karein</p>
+        </div>
+
+        <button onclick="submitOrderProcess()" id="order-btn" class="w-full bg-[#1a1a1a] text-white py-5 rounded-xl font-bold tracking-widest uppercase text-xs shadow-xl hover:bg-gold transition">PLACE ORDER NOW</button>
+    </div>
+</div>
+
+<footer class="p-8 bg-white border-t border-gray-100 mt-10">
+    <div class="max-w-md mx-auto">
+        <h4 class="hero-title text-center text-xl text-gold mb-8">Customer Help</h4>
+        
+        <div class="space-y-4">
+            <details class="group border-b pb-4">
+                <summary class="flex justify-between items-center font-bold text-[10px] uppercase tracking-widest cursor-pointer list-none">
+                    Privacy Policy <i class="fas fa-plus text-gold group-open:rotate-45 transition"></i>
+                </summary>
+                <p class="mt-3 text-xs text-gray-500 leading-loose">Aapka data Zyra Collective ke pas surakshit hai. Hum isse sirf delivery ke liye istemal karte hain.</p>
+            </details>
+            <details class="group border-b pb-4">
+                <summary class="flex justify-between items-center font-bold text-[10px] uppercase tracking-widest cursor-pointer list-none">
+                    Return Policy <i class="fas fa-plus text-gold group-open:rotate-45 transition"></i>
+                </summary>
+                <p class="mt-3 text-xs text-gray-500 leading-loose">7 din ke andar return available hai agar product damaged ho. Unboxing video dikhana anivarya hai.</p>
+            </details>
+            <details class="group border-b pb-4">
+                <summary class="flex justify-between items-center font-bold text-[10px] uppercase tracking-widest cursor-pointer list-none">
+                    FAQs <i class="fas fa-plus text-gold group-open:rotate-45 transition"></i>
+                </summary>
+                <div class="mt-3 space-y-3 text-xs text-gray-500">
+                    <p><b>Q:</b> Delivery kitne din mein hogi?<br><b>A:</b> 3-5 din pan India.</p>
+                    <p><b>Q:</b> Kya COD available hai?<br><b>A:</b> Ji haan, Cash on Delivery pure India mein hai.</p>
                 </div>
-            </div>
-        </template>
-    </main>
+            </details>
+        </div>
 
-    <main x-show="page === 'profile'" x-cloak class="container mx-auto px-4 py-8">
-        <div class="max-w-xl mx-auto text-center">
-             <div class="bg-gray-900/30 p-8 rounded-3xl border border-gold-900/20 mb-8">
-                <div class="w-20 h-20 gold-bg rounded-full mx-auto flex items-center justify-center text-3xl text-black font-black mb-4"><i class="fa-solid fa-user"></i></div>
-                <h2 class="text-xl font-bold uppercase tracking-widest" x-text="userPhone"></h2>
-                <p class="text-gray-500 text-sm mt-1" x-text="userEmail"></p>
-                <button @click="logout()" class="mt-4 text-red-500 text-xs underline uppercase">Logout Session</button>
-            </div>
-            <h3 class="text-lg font-serif gold-text mb-6 italic">Order History</h3>
-            <div class="space-y-4">
-                <template x-for="order in orders" :key="order.id">
-                    <div class="bg-gray-900/40 p-5 rounded-2xl border border-gray-800 flex justify-between items-center text-left">
+        <div class="flex justify-center space-x-10 mt-10 text-gray-400">
+            <a href="https://instagram.com/um3rx70" class="hover:text-pink-600 transition"><i class="fab fa-instagram text-2xl"></i></a>
+            <a href="https://wa.me/7385009275" class="hover:text-green-500 transition"><i class="fab fa-whatsapp text-2xl"></i></a>
+        </div>
+    </div>
+</footer>
+
+<div class="fixed bottom-0 left-0 right-0 bg-[#000] py-4 px-8 flex justify-around items-center border-t border-gray-800 z-[400] rounded-t-2xl">
+    <div onclick="location.reload()" class="text-center cursor-pointer flex flex-col items-center">
+        <i class="fas fa-home text-lg nav-item-active"></i>
+        <span class="text-[8px] uppercase tracking-tighter mt-1 nav-item-active font-bold">Home</span>
+    </div>
+    <div onclick="alert('Order list updating...')" class="text-center cursor-pointer flex flex-col items-center opacity-40">
+        <i class="fas fa-shopping-bag text-white text-lg"></i>
+        <span class="text-[8px] uppercase tracking-tighter mt-1 text-white">Orders</span>
+    </div>
+    <div onclick="location.reload()" class="text-center cursor-pointer flex flex-col items-center opacity-40">
+        <i class="fas fa-redo-alt text-white text-lg"></i>
+        <span class="text-[8px] uppercase tracking-tighter mt-1 text-white">Refresh</span>
+    </div>
+</div>
+
+<script>
+    // --- FIREBASE CONFIG (SAME AS PROVIDED) ---
+    const firebaseConfig = {
+        apiKey: "AIzaSyAY3G265zTP5Qpf9EoGlGy2sSrVYGI4LGk",
+        authDomain: "genzfood2-96e43.firebaseapp.com",
+        databaseURL: "https://genzfood2-96e43-default-rtdb.firebaseio.com",
+        projectId: "genzfood2-96e43",
+        storageBucket: "genzfood2-96e43.firebasestorage.app",
+        messagingSenderId: "410241064931",
+        appId: "1:410241064931:web:a9dcb7f9401d22b2a30ad6"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const auth = firebase.auth();
+
+    // --- EMAILJS CONFIG ---
+    (function() {
+        emailjs.init("YOUR_PUBLIC_KEY"); // Replace with your Public Key
+    })();
+
+    let currentUser = null;
+    let selectedItemName = "";
+
+    function toggleMenu() {
+        document.getElementById('sidebar').classList.toggle('active');
+        document.getElementById('overlay').classList.toggle('active');
+    }
+
+    function handleLogin() {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        auth.signInWithPopup(provider).then(res => {
+            currentUser = res.user;
+            document.getElementById('auth-ui').innerHTML = `<img src="${currentUser.photoURL}" class="w-8 h-8 rounded-full border-2 border-gold cursor-pointer" onclick="showProfile()">`;
+            // Save to DB
+            db.collection("users").doc(currentUser.uid).set({
+                name: currentUser.displayName,
+                email: currentUser.email,
+                lastLogin: new Date()
+            }, { merge: true });
+        }).catch(err => alert("Login failed. Check internet."));
+    }
+
+    function openCategory(cat) {
+        window.scrollTo(0,0);
+        document.getElementById('category-view').classList.add('hidden-section');
+        document.getElementById('hero-main').classList.add('hidden-section');
+        document.getElementById('product-view').classList.remove('hidden-section');
+        
+        let list = document.getElementById('product-list');
+        list.innerHTML = '';
+        let prefix = cat.toLowerCase().replace(" ", "");
+
+        for(let i=1; i<=7; i++) {
+            let itemName = `${cat} Premium Design ${i}`;
+            list.innerHTML += `
+                <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-50 flex flex-col">
+                    <div class="relative overflow-hidden rounded-xl">
+                        <img src="images/${prefix}${i}.png" class="w-full h-80 object-cover" onerror="this.src='https://via.placeholder.com/300x400?text=${cat}+Image'">
+                        <span class="absolute top-3 left-3 bg-black text-white text-[8px] font-bold px-3 py-1.5 rounded-full">NEW ARRIVAL</span>
+                    </div>
+                    <div class="mt-5 flex justify-between items-center">
                         <div>
-                            <h4 class="font-bold gold-text" x-text="order.product"></h4>
-                            <p class="text-[10px] text-gray-500" x-text="order.date"></p>
-                            <span class="inline-block mt-2 text-[10px] bg-green-950 text-green-400 px-3 py-1 rounded-full font-bold uppercase" x-text="order.status"></span>
+                            <h4 class="font-bold text-gray-800">${itemName}</h4>
+                            <p class="text-gold font-bold text-lg mt-1">₹499</p>
                         </div>
-                        <div class="font-black text-lg">₹1,250</div>
+                        <button onclick="startCheckout('${itemName}')" class="bg-[#1a1a1a] text-white px-5 py-2.5 rounded-lg text-[10px] font-bold uppercase tracking-widest">Buy Now</button>
                     </div>
-                </template>
-            </div>
-        </div>
-    </main>
-
-    <div x-show="authModal" x-cloak class="fixed inset-0 z-[100] flex items-center justify-center p-4 modal-blur">
-        <div class="bg-[#111] max-w-sm w-full rounded-3xl p-8 border border-white/10 text-center shadow-2xl">
-            <h2 class="text-2xl font-serif gold-text mb-2 italic uppercase font-black">Sign In</h2>
-            <div id="loginLoader" class="progress-line"><div class="progress-bar"></div></div>
-            <input type="email" x-model="userEmail" placeholder="Email Address" class="w-full bg-black border border-gray-800 p-4 rounded-xl mb-3 focus:border-gold-600 outline-none text-center">
-            <input type="number" x-model="phoneInput" placeholder="Mobile Number" class="w-full bg-black border border-gray-800 p-4 rounded-xl mb-6 focus:border-gold-600 outline-none text-center font-bold tracking-widest">
-            <button @click="login()" class="w-full gold-bg text-black font-black py-4 rounded-xl">CONTINUE</button>
-        </div>
-    </div>
-
-    <div x-show="checkoutModal" x-cloak class="fixed inset-0 z-[100] flex items-center justify-center p-4 modal-blur">
-        <div class="bg-[#111] max-w-lg w-full rounded-3xl border border-gold-900/20 overflow-hidden">
-            <div class="p-6 border-b border-white/5 flex justify-between bg-gray-950">
-                <h2 class="font-bold gold-text tracking-widest uppercase">Checkout</h2>
-                <button @click="checkoutModal = false" class="text-gray-500"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            <div class="p-6 space-y-6">
-                <div x-show="checkoutStep === 1" class="space-y-4">
-                    <input type="text" x-model="shipping.name" placeholder="Full Name" class="w-full bg-black border border-gray-800 p-4 rounded-xl outline-none">
-                    <textarea x-model="shipping.address" placeholder="Shipping Address (City & Pincode)" class="w-full bg-black border border-gray-800 p-4 rounded-xl h-32 outline-none"></textarea>
-                    <button @click="checkoutStep = 2" class="w-full gold-bg text-black font-black py-4 rounded-xl uppercase">Next: Payment</button>
                 </div>
-                <div x-show="checkoutStep === 2" class="space-y-4">
-                    <div @click="payMethod = 'UPI'" :class="payMethod === 'UPI' ? 'border-gold-600 bg-gold-600/5' : 'border-gray-800'" class="p-5 border rounded-2xl cursor-pointer flex justify-between">
-                        <span>UPI (PhonePe / GPay)</span><i :class="payMethod === 'UPI' ? 'fa-solid fa-circle-check gold-text' : 'fa-regular fa-circle'"></i>
-                    </div>
-                    <div @click="payMethod = 'COD'" :class="payMethod === 'COD' ? 'border-gold-600 bg-gold-600/5' : 'border-gray-800'" class="p-5 border rounded-2xl cursor-pointer flex justify-between">
-                        <span>Cash on Delivery (COD)</span><i :class="payMethod === 'COD' ? 'fa-solid fa-circle-check gold-text' : 'fa-regular fa-circle'"></i>
-                    </div>
-                    <button @click="finishOrder()" class="w-full gold-bg text-black font-black py-4 rounded-xl uppercase">Confirm Order</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div style="display: flex; justify-content: space-around; padding: 20px; background: #0d0d0d; margin: 40px 10px; border-radius: 20px; text-align: center; font-size: 10px; color: #666; border: 1px solid #1a1a1a;">
-        <div><i class="fas fa-shipping-fast" style="font-size: 18px; color: #4285f4; margin-bottom: 5px;"></i><p>Fast Delivery</p></div>
-        <div><i class="fas fa-check-circle" style="font-size: 18px; color: #4285f4; margin-bottom: 5px;"></i><p>Quality Assured</p></div>
-        <div><i class="fas fa-lock" style="font-size: 18px; color: #4285f4; margin-bottom: 5px;"></i><p>Secure Payment</p></div>
-        <div><i class="fas fa-undo" style="font-size: 18px; color: #4285f4; margin-bottom: 5px;"></i><p>Easy Returns</p></div>
-    </div>
-
-    <div style="position: fixed; bottom: 20px; right: 20px; display: flex; flex-direction: column; gap: 12px; z-index: 99;">
-        <a href="https://wa.me/917385009275" target="_blank" style="background: #25D366; color: white; width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 26px; box-shadow: 0 4px 15px rgba(0,0,0,0.4);"><i class="fab fa-whatsapp"></i></a>
-        <a href="https://instagram.com/qasrelibaas7" target="_blank" style="background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%,#d6249f 60%,#285AEB 90%); color: white; width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 26px; box-shadow: 0 4px 15px rgba(0,0,0,0.4);"><i class="fab fa-instagram"></i></a>
-    </div>
-
-    <script>
-        function qasrApp() {
-            return {
-                page: 'home', authModal: false, checkoutModal: false, isLoggedIn: false, userPhone: '', phoneInput: '', userEmail: '',
-                checkoutStep: 1, payMethod: 'UPI', selectedItem: null, shipping: { name: '', address: '' }, orders: [],
-                sections: ['Kurta', 'Arabic Kurta', 'Burkha', 'Janamaz', 'Attar'],
-                emailConfig: { publicKey: "YOUR_PUBLIC_KEY", serviceId: "YOUR_SERVICE_ID", templateId: "YOUR_TEMPLATE_ID" },
-
-                initApp() {
-                    emailjs.init(this.emailConfig.publicKey);
-                    const savedUser = localStorage.getItem('ql_user');
-                    if(savedUser) { 
-                        this.isLoggedIn = true; this.userPhone = savedUser; this.userEmail = localStorage.getItem('ql_email');
-                        this.orders = JSON.parse(localStorage.getItem('ql_orders_' + savedUser) || '[]'); 
-                    } else { setTimeout(() => { this.authModal = true; }, 1000); }
-                },
-
-                openProfile() { if(!this.isLoggedIn) this.authModal = true; else this.page = 'profile'; },
-                login() {
-                    if(this.phoneInput.length < 10) return alert("Valid number!");
-                    document.getElementById('loginLoader').style.display = 'block';
-                    setTimeout(() => {
-                        this.isLoggedIn = true; this.userPhone = "+91 " + this.phoneInput;
-                        localStorage.setItem('ql_user', this.userPhone); localStorage.setItem('ql_email', this.userEmail);
-                        document.getElementById('loginLoader').style.display = 'none'; this.authModal = false;
-                    }, 2000);
-                },
-
-                handleProductSelection(cat, id) {
-                    if(!this.isLoggedIn) { this.authModal = true; return; }
-                    this.selectedItem = { name: `Premium ${cat} #${id}` };
-                    this.checkoutModal = true; this.checkoutStep = 1;
-                },
-
-                finishOrder() {
-                    if(!this.shipping.name || !this.shipping.address) return alert("Details complete karein!");
-                    const orderId = "ORD-" + Math.floor(Math.random() * 90000);
-                    const newOrder = { id: orderId, product: this.selectedItem.name, date: new Date().toLocaleDateString('en-IN'), status: 'Order Placed', price: '₹1,250' };
-                    this.orders.unshift(newOrder); localStorage.setItem('ql_orders_' + this.userPhone, JSON.stringify(this.orders));
-
-                    // WhatsApp Message Receipt
-                    const msg = `*QASR-E-LIBAS ORDER*%0A------------------%0A*Order ID:* ${orderId}%0A*Product:* ${this.selectedItem.name}%0A*Price:* ₹1,250%0A*Customer:* ${this.shipping.name}%0A*Phone:* ${this.userPhone}%0A*Address:* ${this.shipping.address}%0A*Payment:* ${this.payMethod}%0A------------------%0A_Barka-Allah! Your order is being processed._`;
-                    const waUrl = `https://wa.me/917385009275?text=${msg}`;
-
-                    // Email Order
-                    emailjs.send(this.emailConfig.serviceId, this.emailConfig.templateId, { product: this.selectedItem.name, customer_name: this.shipping.name, customer_phone: this.userPhone, address: this.shipping.address, payment: this.payMethod, order_id: orderId });
-
-                    if(this.payMethod === 'UPI') {
-                        window.location.href = `upi://pay?pa=7385009275@fam&pn=QasrELibas&am=1250.00&cu=INR&tn=Order_${orderId}`;
-                        setTimeout(() => { window.open(waUrl, '_blank'); }, 3000);
-                    } else {
-                        window.open(waUrl, '_blank');
-                    }
-                    this.checkoutModal = false; this.page = 'profile';
-                },
-                logout() { localStorage.removeItem('ql_user'); location.reload(); }
-            }
+            `;
         }
-    </script>
+    }
+
+    function goBack() {
+        document.getElementById('category-view').classList.remove('hidden-section');
+        document.getElementById('hero-main').classList.remove('hidden-section');
+        document.getElementById('product-view').classList.add('hidden-section');
+    }
+
+    function startCheckout(pName) {
+        if(!currentUser) { handleLogin(); return; }
+        selectedItemName = pName;
+        document.getElementById('order-summary-box').innerText = "Purchasing: " + pName + " @ ₹499";
+        document.getElementById('checkout-page').classList.remove('hidden-section');
+    }
+
+    function toggleQR() {
+        const method = document.getElementById('pay-method').value;
+        document.getElementById('qr-display').classList.toggle('hidden-section', method !== 'UPI');
+    }
+
+    function closeCheckout() { document.getElementById('checkout-page').classList.add('hidden-section'); }
+
+    function submitOrderProcess() {
+        const name = document.getElementById('cust-name').value.trim();
+        const phone = document.getElementById('cust-phone').value.trim();
+        const addr = document.getElementById('cust-address').value.trim();
+        const payment = document.getElementById('pay-method').value;
+
+        if(!name || !phone || !addr) { alert("Bhai, Details bharna zaroori hai!"); return; }
+
+        const orderDetails = {
+            customer_name: name,
+            to_email: "your_email@gmail.com", // Replace with your email
+            product_name: selectedItemName,
+            phone_number: phone,
+            address: addr,
+            payment_type: payment,
+            final_price: payment === "UPI" ? "₹424" : "₹499"
+        };
+
+        const btn = document.getElementById('order-btn');
+        btn.disabled = true;
+        btn.innerText = "PLACING ORDER...";
+
+        // 1. Firebase Store
+        db.collection("orders").add({
+            userId: currentUser.uid,
+            ...orderDetails,
+            timestamp: new Date()
+        }).then(() => {
+            // 2. EmailJS Send
+            emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", orderDetails)
+                .then(() => {
+                    alert("Order Confirmed! 🎉 Check your email/WhatsApp for updates.");
+                    location.reload();
+                });
+        }).catch(err => {
+            alert("Error placing order. Please try again.");
+            btn.disabled = false;
+            btn.innerText = "PLACE ORDER NOW";
+        });
+    }
+
+    function showProfile() {
+        alert("Hello " + currentUser.displayName + "!\nYour orders and addresses are securely stored in Zyra DB.");
+    }
+
+    function openPolicy(type) {
+        if(type==='privacy') alert("Privacy Policy: Your data is 100% safe with Zyra.");
+        if(type==='return') alert("Return Policy: 7-day exchange for damaged items.");
+        toggleMenu();
+    }
+</script>
+
 </body>
 </html>
