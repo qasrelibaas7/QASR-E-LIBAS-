@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zyra Collective | Professional Boutique</title>
+    <title>Zyra Collective | Luxury Boutique</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -18,22 +18,36 @@
         body { font-family: 'Montserrat', sans-serif; background: var(--bg); overflow-x: hidden; }
         .hero-title { font-family: 'Playfair Display', serif; }
         
-        /* Smooth Sliding & Animations */
-        .page-transition { animation: slideIn 0.3s ease-out forwards; }
-        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
+        .page-transition { animation: slideUp 0.4s cubic-bezier(0, 0, 0.2, 1); }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         
         .hidden-section { display: none !important; }
-        .active-nav { color: var(--gold) !important; border-bottom: 2px solid var(--gold); }
+        .nav-item.active { color: var(--gold); border-top: 2px solid var(--gold); }
         
-        /* Sliding Line for Premium Feel */
-        .sliding-line { height: 2px; width: 0; background: var(--gold); transition: 0.4s; }
-        .group:hover .sliding-line { width: 100%; }
+        /* Sliding Line UI */
+        .menu-item { position: relative; overflow: hidden; transition: 0.3s; }
+        .menu-item::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px; background: var(--gold); transition: 0.3s; }
+        .menu-item:active::after { width: 100%; }
 
-        #sidebar { transition: 0.4s; transform: translateX(-100%); z-index: 3000; }
+        #sidebar { transition: 0.4s; transform: translateX(-100%); z-index: 5000; }
         #sidebar.active { transform: translateX(0); }
     </style>
 </head>
-<body class="pb-20">
+<body class="pb-24">
+
+<div id="sidebar" class="fixed inset-y-0 left-0 w-72 bg-white shadow-2xl p-6">
+    <div class="flex justify-between items-center mb-8 border-b pb-4">
+        <h2 class="hero-title text-xl text-gold">Zyra Collective</h2>
+        <i onclick="toggleMenu()" class="fas fa-times text-xl"></i>
+    </div>
+    <div class="space-y-6 text-sm font-bold uppercase tracking-widest text-gray-600">
+        <p onclick="location.reload()">Home</p>
+        <p onclick="alert('Return Policy: 7 Days Exchange')">Return Policy</p>
+        <p onclick="alert('Privacy: Your data is 100% safe')">Privacy Policy</p>
+        <p onclick="window.location.href='https://wa.me/917385009275'">Contact Us</p>
+    </div>
+</div>
+<div id="overlay" onclick="toggleMenu()" class="fixed inset-0 bg-black/40 z-[4000] hidden-section"></div>
 
 <nav class="bg-white p-4 flex justify-between items-center sticky top-0 z-50 shadow-sm">
     <div class="flex items-center space-x-4">
@@ -45,100 +59,99 @@
     </div>
 </nav>
 
-<div id="main-home">
-    <section class="h-56 bg-gray-200 relative">
-        <img src="images/hero.png" class="w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/800x400?text=Luxury+Boutique'">
-        <div class="absolute inset-0 bg-black/20 flex items-center justify-center">
-            <h2 class="text-3xl text-white hero-title">Modest Luxury</h2>
+<div id="home-view" class="page-transition">
+    <section class="h-60 bg-gray-200 relative">
+        <img src="images/hero.png" class="w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/800x400?text=Zyra+Boutique'">
+        <div class="absolute inset-0 bg-black/20 flex items-center justify-center text-white">
+            <h2 class="text-3xl hero-title">Modest Luxury</h2>
         </div>
     </section>
 
     <div class="p-4 grid grid-cols-2 gap-4">
-        <div onclick="openCategory('Burkha')" class="bg-white rounded-xl shadow-sm overflow-hidden border">
-            <img src="images/cat1.png" class="h-40 w-full object-cover" onerror="this.src='https://via.placeholder.com/200x300?text=Burkha'">
-            <p class="p-3 text-center text-[10px] font-bold uppercase">Burkha</p>
+        <div onclick="openCategory('Burkha')" class="bg-white rounded-2xl shadow-sm border overflow-hidden p-2">
+            <img src="images/burkha.png" class="h-40 w-full object-cover rounded-xl" onerror="this.src='https://via.placeholder.com/200x300?text=Burkha'">
+            <p class="mt-2 text-center text-[10px] font-bold uppercase">Burkha</p>
         </div>
-        <div onclick="openCategory('Abaya')" class="bg-white rounded-xl shadow-sm overflow-hidden border">
-            <img src="images/cat2.png" class="h-40 w-full object-cover" onerror="this.src='https://via.placeholder.com/200x300?text=Abaya'">
-            <p class="p-3 text-center text-[10px] font-bold uppercase">Abaya</p>
+        <div onclick="openCategory('Abaya')" class="bg-white rounded-2xl shadow-sm border overflow-hidden p-2">
+            <img src="images/abaya.png" class="h-40 w-full object-cover rounded-xl" onerror="this.src='https://via.placeholder.com/200x300?text=Abaya'">
+            <p class="mt-2 text-center text-[10px] font-bold uppercase">Abaya</p>
+        </div>
+        <div onclick="openCategory('Hijab')" class="bg-white rounded-2xl shadow-sm border overflow-hidden p-2">
+            <img src="images/hijab.png" class="h-40 w-full object-cover rounded-xl" onerror="this.src='https://via.placeholder.com/200x300?text=Hijab'">
+            <p class="mt-2 text-center text-[10px] font-bold uppercase">Hijab</p>
+        </div>
+        <div onclick="openCategory('Kurta')" class="bg-white rounded-2xl shadow-sm border overflow-hidden p-2">
+            <img src="images/kurta.png" class="h-40 w-full object-cover rounded-xl" onerror="this.src='https://via.placeholder.com/200x300?text=Kurta'">
+            <p class="mt-2 text-center text-[10px] font-bold uppercase">Kurta</p>
         </div>
     </div>
 </div>
 
 <div id="product-view" class="hidden-section p-5 page-transition">
-    <button onclick="goBack()" class="mb-5 text-gray-400 font-bold text-xs uppercase"><i class="fas fa-arrow-left mr-2"></i> Back</button>
+    <button onclick="showHome()" class="mb-5 text-gray-400 font-bold text-xs"><i class="fas fa-arrow-left"></i> BACK</button>
     <div id="product-list" class="space-y-6"></div>
 </div>
 
-<div id="account-page" class="hidden-section fixed inset-0 bg-white z-[100] overflow-y-auto page-transition">
-    <div class="p-4 border-b flex items-center space-x-4">
-        <i onclick="closeAccount()" class="fas fa-arrow-left text-lg"></i>
-        <h2 class="font-bold uppercase tracking-widest text-sm">Account</h2>
-    </div>
-    
-    <div class="p-6 flex items-center space-x-4 bg-white border-b">
-        <img id="user-img" src="" class="w-16 h-16 rounded-full border-2 border-gold shadow-md">
-        <div>
-            <h3 id="user-name" class="font-bold text-lg">Guest</h3>
-            <p class="text-xs text-gray-400">Premium Member</p>
-        </div>
-    </div>
-
-    <div class="mt-4 bg-white divide-y">
-        <div onclick="openOrders()" class="p-5 flex items-center justify-between group cursor-pointer">
-            <div class="flex items-center space-x-4"><i class="fas fa-box text-gold"></i><span class="text-sm font-semibold">My Orders</span></div>
-            <i class="fas fa-chevron-right text-gray-300"></i>
-            <div class="sliding-line absolute bottom-0 left-0"></div>
-        </div>
-        <div onclick="openSettings()" class="p-5 flex items-center justify-between group cursor-pointer">
-            <div class="flex items-center space-x-4"><i class="fas fa-cog text-gray-500"></i><span class="text-sm font-semibold">Settings</span></div>
-            <i class="fas fa-chevron-right text-gray-300"></i>
-        </div>
-        <div onclick="handleLogout()" class="p-5 flex items-center space-x-4 text-red-500 font-bold">
-            <i class="fas fa-sign-out-alt"></i><span class="text-sm">Logout</span>
-        </div>
+<div id="checkout-view" class="hidden-section fixed inset-0 bg-white z-[1000] p-6 overflow-y-auto">
+    <h2 class="hero-title text-2xl mb-6">Checkout</h2>
+    <div class="space-y-4">
+        <input type="text" id="c-name" placeholder="Full Name" class="w-full border p-4 rounded-xl outline-none">
+        <input type="tel" id="c-phone" placeholder="WhatsApp Number" class="w-full border p-4 rounded-xl outline-none">
+        <textarea id="c-addr" placeholder="Full Address" class="w-full border p-4 rounded-xl h-24 outline-none"></textarea>
+        <select id="c-pay" class="w-full border p-4 rounded-xl font-bold bg-white">
+            <option value="COD">Cash on Delivery</option>
+            <option value="UPI">Pay Online (15% Discount)</option>
+        </select>
+        <button onclick="placeOrder()" id="order-btn" class="w-full bg-black text-white py-5 rounded-xl font-bold uppercase tracking-widest">Confirm Order</button>
+        <button onclick="closeCheckout()" class="w-full text-gray-400 text-xs mt-2">Cancel</button>
     </div>
 </div>
 
-<div id="orders-page" class="hidden-section fixed inset-0 bg-white z-[200] overflow-y-auto page-transition">
-    <div class="p-4 border-b flex items-center space-x-4 sticky top-0 bg-white">
-        <i onclick="closeOrders()" class="fas fa-arrow-left text-lg"></i>
-        <h2 class="font-bold uppercase tracking-widest text-sm">My Orders</h2>
+<div id="orders-view" class="hidden-section fixed inset-0 bg-white z-[500] overflow-y-auto page-transition">
+    <div class="p-4 border-b flex items-center space-x-4 bg-white sticky top-0">
+        <i onclick="showHome()" class="fas fa-arrow-left text-lg"></i>
+        <h2 class="font-bold uppercase text-sm tracking-widest">My Orders</h2>
     </div>
     <div id="orders-list" class="p-4 space-y-4">
-        <p class="text-center text-gray-400 text-xs py-10">No orders found yet.</p>
+        </div>
+</div>
+
+<div id="profile-view" class="hidden-section fixed inset-0 bg-[#f8f9fa] z-[400] overflow-y-auto page-transition">
+    <div class="bg-white p-4 border-b flex items-center space-x-4">
+        <i onclick="showHome()" class="fas fa-arrow-left text-lg"></i>
+        <h2 class="font-bold text-sm uppercase">Account</h2>
+    </div>
+    <div class="bg-white p-6 flex items-center space-x-4 border-b mb-2">
+        <img id="p-img" src="" class="w-16 h-16 rounded-full border-2 border-gold">
+        <div><h3 id="p-name" class="font-bold text-lg">User</h3><p class="text-xs text-gray-400">Zyra Gold Member</p></div>
+    </div>
+    <div class="bg-white divide-y">
+        <div onclick="showOrders()" class="menu-item p-5 flex items-center justify-between"><div class="flex items-center space-x-4"><i class="fas fa-box text-gold"></i><span class="text-sm font-semibold">My Orders</span></div><i class="fas fa-chevron-right text-gray-300"></i></div>
+        <div onclick="showSettings()" class="menu-item p-5 flex items-center justify-between"><div class="flex items-center space-x-4"><i class="fas fa-cog text-gray-500"></i><span class="text-sm font-semibold">Settings</span></div><i class="fas fa-chevron-right text-gray-300"></i></div>
+        <div onclick="handleLogout()" class="p-5 flex items-center space-x-4 text-red-500 font-bold"><i class="fas fa-sign-out-alt"></i><span>Logout</span></div>
     </div>
 </div>
 
-<div id="settings-page" class="hidden-section fixed inset-0 bg-[#f8f9fa] z-[300] overflow-y-auto page-transition">
-    <div class="p-4 border-b flex items-center space-x-4 bg-white sticky top-0">
-        <i onclick="closeSettings()" class="fas fa-arrow-left text-lg"></i>
-        <h2 class="font-bold uppercase tracking-widest text-sm">Settings</h2>
+<div id="settings-view" class="hidden-section fixed inset-0 bg-[#f8f9fa] z-[600] page-transition">
+    <div class="bg-white p-4 border-b flex items-center space-x-4">
+        <i onclick="openAccount()" class="fas fa-arrow-left text-lg"></i>
+        <h2 class="font-bold text-sm uppercase">Settings</h2>
     </div>
     <div class="mt-4 bg-white divide-y">
-        <div class="p-4 flex items-center justify-between">
-            <div><p class="text-sm font-semibold">Order Notifications</p><p class="text-[10px] text-gray-400">Get WhatsApp updates</p></div>
-            <input type="checkbox" checked class="w-5 h-5 accent-gold">
-        </div>
-        <div class="p-4 flex items-center justify-between">
-            <div><p class="text-sm font-semibold">Dark Mode</p><p class="text-[10px] text-gray-400">Beta Version</p></div>
-            <input type="checkbox" class="w-5 h-5 accent-gold">
-        </div>
-        <div onclick="alert('Zyra V1.0.1 - Secure')" class="p-4 flex items-center justify-between">
-            <span class="text-sm font-semibold">App Version</span>
-            <span class="text-xs text-gray-300">1.0.1</span>
-        </div>
+        <div class="p-4 flex items-center justify-between"><span>WhatsApp Updates</span><input type="checkbox" checked class="accent-gold w-5 h-5"></div>
+        <div class="p-4 flex items-center justify-between"><span>Dark Mode (Beta)</span><input type="checkbox" class="accent-gold w-5 h-5"></div>
+        <div class="p-4 text-center text-[10px] text-gray-300 tracking-widest uppercase">Version 1.0.1</div>
     </div>
 </div>
 
-<div class="fixed bottom-0 left-0 right-0 bg-white border-t p-3 flex justify-around items-center z-50">
-    <div onclick="location.reload()" class="text-center text-gold"><i class="fas fa-home text-lg"></i><p class="text-[8px] font-bold uppercase">Home</p></div>
-    <div onclick="openOrders()" class="text-center text-gray-400"><i class="fas fa-shopping-bag text-lg"></i><p class="text-[8px] font-bold uppercase">Orders</p></div>
-    <div onclick="openAccount()" class="text-center text-gray-400"><i class="fas fa-user text-lg"></i><p class="text-[8px] font-bold uppercase">Profile</p></div>
+<div class="fixed bottom-0 left-0 right-0 bg-white border-t p-3 flex justify-around items-center z-[1000] shadow-2xl">
+    <div onclick="showHome()" id="nav-home" class="nav-item text-center cursor-pointer active"><i class="fas fa-home text-lg"></i><p class="text-[8px] font-bold">HOME</p></div>
+    <div onclick="showOrders()" id="nav-orders" class="nav-item text-center cursor-pointer text-gray-300"><i class="fas fa-shopping-bag text-lg"></i><p class="text-[8px] font-bold">ORDERS</p></div>
+    <div onclick="openAccount()" id="nav-profile" class="nav-item text-center cursor-pointer text-gray-300"><i class="fas fa-user text-lg"></i><p class="text-[8px] font-bold">PROFILE</p></div>
 </div>
 
 <script>
-    // Config Same Rakhi Hai
+    // Firebase Setup
     const firebaseConfig = {
         apiKey: "AIzaSyAY3G265zTP5Qpf9EoGlGy2sSrVYGI4LGk",
         authDomain: "genzfood2-96e43.firebaseapp.com",
@@ -152,97 +165,93 @@
     const auth = firebase.auth();
 
     let currentUser = null;
-    let selectedItemName = "";
-    let basePrice = 0;
+    let selectedItem = "";
+    let itemPrice = 0;
 
-    // AUTH OBSERVER
-    auth.onAuthStateChanged((user) => {
-        const authUI = document.getElementById('auth-ui');
-        if (user) {
+    // View Manager (No Mistakes)
+    function hideAll() {
+        ['home-view', 'product-view', 'orders-view', 'profile-view', 'settings-view'].forEach(id => document.getElementById(id).classList.add('hidden-section'));
+        ['nav-home', 'nav-orders', 'nav-profile'].forEach(id => document.getElementById(id).classList.replace('text-gold', 'text-gray-300'));
+        ['nav-home', 'nav-orders', 'nav-profile'].forEach(id => document.getElementById(id).classList.remove('active'));
+    }
+
+    function showHome() { hideAll(); document.getElementById('home-view').classList.remove('hidden-section'); document.getElementById('nav-home').classList.add('active'); }
+    function showOrders() { 
+        if(!currentUser) { handleLogin(); return; }
+        hideAll(); 
+        document.getElementById('orders-view').classList.remove('hidden-section'); 
+        document.getElementById('nav-orders').classList.add('active');
+        fetchOrders();
+    }
+    function openAccount() { if(!currentUser) { handleLogin(); return; } hideAll(); document.getElementById('profile-view').classList.remove('hidden-section'); document.getElementById('nav-profile').classList.add('active'); }
+    function showSettings() { hideAll(); document.getElementById('settings-view').classList.remove('hidden-section'); }
+
+    // Auth logic
+    auth.onAuthStateChanged(user => {
+        if(user) {
             currentUser = user;
-            authUI.innerHTML = `<img src="${user.photoURL}" class="w-8 h-8 rounded-full border border-gold">`;
-            document.getElementById('user-img').src = user.photoURL;
-            document.getElementById('user-name').innerText = user.displayName;
-        } else {
-            currentUser = null;
-            authUI.innerHTML = `<button onclick="handleLogin()" class="text-[10px] font-bold border-b-2 border-gold uppercase">Login</button>`;
+            document.getElementById('auth-ui').innerHTML = `<img src="${user.photoURL}" class="w-8 h-8 rounded-full border border-gold">`;
+            document.getElementById('p-img').src = user.photoURL;
+            document.getElementById('p-name').innerText = user.displayName;
         }
     });
-
     function handleLogin() { auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); }
     function handleLogout() { auth.signOut().then(() => location.reload()); }
+    function toggleMenu() { document.getElementById('sidebar').classList.toggle('active'); document.getElementById('overlay').classList.toggle('hidden-section'); }
 
-    // PAGE NAVIGATION FUNCTIONS
-    function openAccount() { if(!currentUser) handleLogin(); else document.getElementById('account-page').classList.remove('hidden-section'); }
-    function closeAccount() { document.getElementById('account-page').classList.add('hidden-section'); }
-
-    function openOrders() { 
-        if(!currentUser) { handleLogin(); return; }
-        document.getElementById('orders-page').classList.remove('hidden-section');
-        fetchUserOrders();
-    }
-    function closeOrders() { document.getElementById('orders-page').classList.add('hidden-section'); }
-
-    function openSettings() { document.getElementById('settings-page').classList.remove('hidden-section'); }
-    function closeSettings() { document.getElementById('settings-page').classList.add('hidden-section'); }
-
-    // FETCH ORDERS FROM FIREBASE
-    async function fetchUserOrders() {
-        const list = document.getElementById('orders-list');
-        list.innerHTML = '<p class="text-center text-xs text-gray-400">Loading your orders...</p>';
-        
-        try {
-            const snapshot = await db.collection("orders")
-                .where("Client", "==", currentUser.displayName)
-                .get();
-            
-            if (snapshot.empty) {
-                list.innerHTML = '<div class="text-center py-20"><i class="fas fa-box-open text-4xl text-gray-200 mb-4"></i><p class="text-xs text-gray-400 font-bold">KUCH BHI ORDER NAHI MILA</p></div>';
-                return;
-            }
-
-            list.innerHTML = '';
-            snapshot.forEach(doc => {
-                const data = doc.data();
-                list.innerHTML += `
-                    <div class="bg-white border rounded-xl p-4 shadow-sm animate-fade">
-                        <div class="flex justify-between border-b pb-2 mb-2">
-                            <span class="text-[10px] font-bold text-gold uppercase">Order Confirmed</span>
-                            <span class="text-[9px] text-gray-400">${data.Timestamp || 'Recent'}</span>
-                        </div>
-                        <h4 class="font-bold text-sm">${data.Item || data.Product}</h4>
-                        <p class="text-xs text-gray-500 mt-1">Status: Processing for Dispatch</p>
-                        <p class="text-gold font-bold text-sm mt-2">${data.Total}</p>
-                    </div>`;
-            });
-        } catch (e) {
-            list.innerHTML = '<p class="text-center text-red-400 text-xs">Error loading orders.</p>';
-        }
-    }
-
-    // CATEGORY FUNCTIONS
+    // Category & Checkout
     function openCategory(cat) {
-        document.getElementById('main-home').classList.add('hidden-section');
+        hideAll();
         document.getElementById('product-view').classList.remove('hidden-section');
         let list = document.getElementById('product-list');
         list.innerHTML = '';
         let price = (cat === 'Attar') ? 299 : 899;
-        
         for(let i=1; i<=4; i++) {
             let name = `Zyra ${cat} - Vol ${i}`;
-            list.innerHTML += `
-                <div class="bg-white p-4 rounded-2xl border shadow-sm">
-                    <img src="images/item.png" class="w-full h-80 object-cover rounded-xl" onerror="this.src='https://via.placeholder.com/300x400?text=${cat}'">
-                    <div class="mt-4 flex justify-between items-center">
-                        <div><h4 class="font-bold text-sm">${name}</h4><p class="text-gold font-bold">₹${price}</p></div>
-                        <button onclick="alert('Order Feature Ready!')" class="bg-black text-white px-6 py-2 rounded-lg text-xs font-bold uppercase">Buy</button>
-                    </div>
-                </div>`;
+            list.innerHTML += `<div class="bg-white p-4 rounded-2xl border shadow-sm">
+                <img src="images/item.png" class="w-full h-80 object-cover rounded-xl" onerror="this.src='https://via.placeholder.com/300?text=${cat}'">
+                <div class="mt-4 flex justify-between items-center">
+                    <div><h4 class="font-bold text-sm">${name}</h4><p class="text-gold font-bold">₹${price}</p></div>
+                    <button onclick="startCheckout('${name}', ${price})" class="bg-black text-white px-6 py-2 rounded-lg text-xs font-bold">BUY</button>
+                </div>
+            </div>`;
         }
     }
-    function goBack() { 
-        document.getElementById('main-home').classList.remove('hidden-section'); 
-        document.getElementById('product-view').classList.add('hidden-section'); 
+    function startCheckout(name, price) { selectedItem = name; itemPrice = price; document.getElementById('checkout-view').classList.remove('hidden-section'); }
+    function closeCheckout() { document.getElementById('checkout-view').classList.add('hidden-section'); }
+
+    async function placeOrder() {
+        const name = document.getElementById('c-name').value;
+        const phone = document.getElementById('c-phone').value;
+        const addr = document.getElementById('c-addr').value;
+        const pay = document.getElementById('c-pay').value;
+
+        if(!name || !phone || !addr) return alert("Details bharo bhai!");
+        
+        const orderData = { Client: name, Item: selectedItem, WhatsApp: phone, Address: addr, Total: "₹" + itemPrice, Timestamp: new Date().toLocaleString() };
+
+        try {
+            await db.collection("orders").add(orderData);
+            await fetch("https://formspree.io/f/mkovazzj", { method: "POST", body: JSON.stringify(orderData), headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' } });
+            alert("Order Success!");
+            location.reload();
+        } catch (e) { alert("Error!"); }
+    }
+
+    async function fetchOrders() {
+        const list = document.getElementById('orders-list');
+        list.innerHTML = '<p class="text-center text-xs py-10">Loading orders...</p>';
+        const snapshot = await db.collection("orders").where("Client", "==", currentUser.displayName).get();
+        if(snapshot.empty) { list.innerHTML = '<p class="text-center py-20 text-gray-300">No Orders Found</p>'; return; }
+        list.innerHTML = '';
+        snapshot.forEach(doc => {
+            const data = doc.data();
+            list.innerHTML += `<div class="bg-white border rounded-xl p-4 shadow-sm">
+                <div class="flex justify-between border-b pb-2 mb-2"><span class="text-[10px] font-bold text-gold">CONFIRMED</span><span class="text-[9px] text-gray-400">${data.Timestamp}</span></div>
+                <h4 class="font-bold text-sm">${data.Item}</h4>
+                <p class="text-gold font-bold text-sm mt-1">${data.Total}</p>
+            </div>`;
+        });
     }
 </script>
 </body>
