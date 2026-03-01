@@ -159,88 +159,74 @@
 
     const FORMSPREE_ID = "mkovazzj"; 
 
-    const productsData = {
-        "Burkha": ["Classic Nida", "Lace Luxe", "Stone Work", "Dubai Style", "Butterfly Cut", "Satin Silk", "Daily Wear"],
-        "Abaya": ["A-Line Cut", "Kimono Style", "Open Front", "Zari Abaya", "Premium Velvet", "Summer Breeze", "Luxe Satin"],
-        "Hijab": ["Chiffon Soft", "Premium Jersey", "Crinkle Silk", "Satin Pearl", "Instant Hijab", "Viscose Matte", "Modal Hijab"],
-        "Kurta": ["Floral Print", "Casual Linen", "Festive Cut", "Embroidered", "Luxe Rayon", "Long Flared", "Party Wear"],
-        "Prayer Mat": ["Turkish Padded", "Velvet Mat", "Travel Mat", "Orthopedic", "Kids Mat", "Royal Thread", "Silk Mat"],
-        "Attar": ["Oud Al-Layl", "White Musk", "Dehn Oud", "Rose Special", "Arabian Night", "Sweet Amber", "Sandalwood"]
-    };
+    
+    
+    function startCheckout(name, price) {// 1. Is data structure ko replace karein (Products aur Price ke liye)
+const productsData = {
+    "Burkha": [
+        { name: "Classic Nida", price: "499" }, { name: "Lace Luxe", price: "499" },
+        { name: "Stone Work", price: "499" }, { name: "Dubai Style", price: "499" },
+        { name: "Butterfly Cut", price: "499" }, { name: "Satin Silk", price: "499" },
+        { name: "Daily Wear", price: "499" }
+    ],
+    "Abaya": [
+        { name: "A-Line Cut", price: "499" }, { name: "Kimono Style", price: "499" },
+        { name: "Open Front", price: "499" }, { name: "Zari Abaya", price: "499" },
+        { name: "Premium Velvet", price: "499" }, { name: "Summer Breeze", price: "499" },
+        { name: "Luxe Satin", price: "499" }
+    ],
+    "Hijab": [
+        { name: "Chiffon Soft", price: "499" }, { name: "Premium Jersey", price: "499" },
+        { name: "Crinkle Silk", price: "499" }, { name: "Satin Pearl", price: "499" },
+        { name: "Instant Hijab", price: "499" }, { name: "Viscose Matte", price: "499" },
+        { name: "Modal Hijab", price: "499" }
+    ],
+    "Kurta": [
+        { name: "Floral Print", price: "499" }, { name: "Casual Linen", price: "499" },
+        { name: "Festive Cut", price: "499" }, { name: "Embroidered", price: "499" },
+        { name: "Luxe Rayon", price: "499" }, { name: "Long Flared", price: "499" },
+        { name: "Party Wear", price: "499" }
+    ],
+    "Prayer Mat": [
+        { name: "Turkish Padded", price: "499" }, { name: "Velvet Mat", price: "499" },
+        { name: "Travel Mat", price: "499" }, { name: "Orthopedic", price: "499" },
+        { name: "Kids Mat", price: "499" }, { name: "Royal Thread", price: "499" },
+        { name: "Silk Mat", price: "499" }
+    ],
+    "Attar": [
+        { name: "Oud Al-Layl", price: "499" }, { name: "White Musk", price: "499" },
+        { name: "Dehn Oud", price: "499" }, { name: "Rose Special", price: "499" },
+        { name: "Arabian Night", price: "499" }, { name: "Sweet Amber", price: "499" },
+        { name: "Sandalwood", price: "499" }
+    ]
+};
 
-    function initHome() {
-        const grid = document.getElementById('category-grid');
-        grid.innerHTML = '';
-        Object.keys(productsData).forEach((cat, index) => {
-            const catImg = `images/category${index + 1}.png`; 
-            grid.innerHTML += `
-                <div onclick="openCat('${cat}')" class="bg-gray-50 p-2 rounded-3xl border text-center cursor-pointer">
-                    <img src="${catImg}" class="h-44 w-full object-cover rounded-2xl" onerror="this.src='https://via.placeholder.com/300?text=${cat}'">
-                    <p class="mt-2 text-[10px] font-bold uppercase tracking-widest">${cat}</p>
-                </div>`;
-        });
-    }
-
-    function showSection(id, type) {
-        if((id === 'profile-page' || id === 'checkout-page' || id === 'orders-page') && !user) { 
-            auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); return; 
-        }
-        document.querySelectorAll('.app-section').forEach(s => s.classList.add('hidden'));
-        document.getElementById(id).classList.remove('hidden');
-
-        if(id === 'policy-page') {
-            document.getElementById('pol-title').innerText = type + " Policy";
-            document.getElementById('pol-body').innerText = type === 'Return' 
-                ? "Return Policy: Aap 7 din ke andar product exchange kar sakte hain." 
-                : "Privacy Policy: Aapka data humare paas 100% safe hai.";
-        }
-        if(id === 'orders-page' && user) fetchOrders();
-        toggleSidebar(false);
-        window.scrollTo(0,0);
-    }
-
-    function toggleSidebar(f) {
-        document.getElementById('sidebar').classList.toggle('active', f);
-        document.getElementById('overlay').classList.toggle('active', f);
-    }
-
-    function toggleQR(show) { document.getElementById('qr-section').classList.toggle('hidden', !show); }
-
-    auth.onAuthStateChanged(u => {
-        user = u;
-        if(u) {
-            document.getElementById('top-auth').innerHTML = `<img src="${u.photoURL}" class="w-8 h-8 rounded-full border border-gold">`;
-            document.getElementById('u-img').src = u.photoURL;
-            document.getElementById('u-name').innerText = u.displayName;
-            document.getElementById('cust-name').value = u.displayName;
-        }
-    });
-
-    function openCat(name) {
+// 2. Is function ko replace karein (Images aur Price display ke liye)
+function openCat(name) {
     showSection('product-view');
     document.getElementById('cat-title').innerText = name;
     const list = document.getElementById('prod-list');
     list.innerHTML = '';
+    
+    // Space hatane ke liye (Jaise 'Prayer Mat' ko 'prayermat' banane ke liye)
+    const folderName = name.toLowerCase().replace(/\s/g, '');
 
     productsData[name].forEach((item, i) => {
-        // Image ka naam wahi rahega: burkha1.png, burkha2.png...
-        const pImg = `images/${name.toLowerCase()}${i + 1}.png`; 
-        
+        const pImg = `images/${folderName}${i + 1}.png`; 
         list.innerHTML += `
         <div class="bg-white p-4 rounded-3xl border shadow-sm">
             <img src="${pImg}" class="w-full h-80 object-cover rounded-2xl" onerror="this.src='https://via.placeholder.com/400?text=${item.name}'">
             <div class="mt-4 flex justify-between items-center">
                 <div>
                     <h4 class="font-bold text-sm uppercase">${item.name}</h4>
-                    <p class="text-gold font-bold">${item.price}</p> 
+                    <p class="text-gold font-bold">₹${item.price}</p>
                 </div>
-                <button onclick="startCheckout('${item.name}', '${item.price}')" class="bg-black text-white px-6 py-2 rounded-xl text-[10px] font-bold uppercase">Buy Now</button>
+                <button onclick="startCheckout('${item.name}', '₹${item.price}')" class="bg-black text-white px-6 py-2 rounded-xl text-[10px] font-bold uppercase">Buy Now</button>
             </div>
         </div>`;
     });
-    }
-    
-    function startCheckout(name, price) {
+}
+        
         currentItem = { name, price };
         showSection('checkout-page');
         document.getElementById('item-summary').innerHTML = `<h4 class="font-bold text-lg">${name}</h4><p class="text-gold font-bold text-xl">${price}</p>`;
